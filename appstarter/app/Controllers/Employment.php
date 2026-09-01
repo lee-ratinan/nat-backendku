@@ -2165,4 +2165,60 @@ class Employment extends BaseController
         return view('employment_part_time_period_edit', $data);
     }
 
+    public function partTimePayPeriodSave(): ResponseInterface
+    {
+        $pt_model  = new CompanyPartTimePeriodModel();
+        $log_model = new LogActivityModel();
+        $session   = session();
+        $id        = $this->request->getPost('id');
+        $data      = [];
+        $fields    = [
+            'company_id',
+            'period_start',
+            'period_end',
+            'actual_hours',
+            'subtotal_income',
+            'income_deduction',
+            'total_income',
+            'average_hourly_income',
+            'google_drive_link',
+        ];
+        foreach ($fields as $field) {
+            $value        = $this->request->getPost($field);
+            $data[$field] = (!empty($value)) ? $value : null;
+        }
+        try {
+            if (0 < $id) {
+                if ($pt_model->update($id, $data)) {
+                    $log_model->insertTableUpdate('company_pt_period', $id, $data, $session->user_id);
+                    return $this->response->setJSON([
+                        'status'   => 'success',
+                        'toast'    => 'Successfully updated the part-time pay period.',
+                        'redirect' => base_url($session->locale . '/office/employment/part-time/pay-period')
+                    ]);
+                }
+            } else {
+                $data['created_by'] = $session->user_id;
+                // INSERT
+                if ($id = $pt_model->insert($data)) {
+                    $log_model->insertTableUpdate('company_pt_period', $id, $data, $session->user_id);
+                    return $this->response->setJSON([
+                        'status'   => 'success',
+                        'toast'    => 'Successfully created new part-time pay period.',
+                        'redirect' => base_url($session->locale . '/office/employment/part-time/pay-period')
+                    ]);
+                }
+            }
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'toast'   => lang('System.status_message.generic_error')
+            ])->setStatusCode(HTTP_STATUS_SOMETHING_WRONG);
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'toast'   => $e->getMessage()
+            ])->setStatusCode(HTTP_STATUS_SOMETHING_WRONG);
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ $this->extend($layout);
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?= base_url($session->locale . '/office/dashboard') ?>"><?= lang('System.dashboard.page_title') ?></a></li>
                 <li class="breadcrumb-item"><a href="<?= base_url($session->locale . '/office/employment/part-time') ?>">Part Time Schedule</a></li>
+                <li class="breadcrumb-item"><a href="<?= base_url($session->locale . '/office/employment/part-time/pay-period') ?>">Part Time Pay Period</a></li>
                 <li class="breadcrumb-item active"><?= $page_title ?></li>
             </ol>
         </nav>
@@ -81,7 +82,7 @@ $this->extend($layout);
                 }
                 $(this).prop('disabled', true);
                 $.ajax({
-                    url: '<?= base_url('en/office/employment/part-time/period/edit') ?>',
+                    url: '<?= base_url('en/office/employment/part-time/pay-period/edit') ?>',
                     type: 'post',
                     data: {
                         'id': '<?= $id ?>',
