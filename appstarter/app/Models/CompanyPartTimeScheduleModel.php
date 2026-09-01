@@ -161,7 +161,6 @@ class CompanyPartTimeScheduleModel extends Model
             ->groupBy('period_id')
             ->findAll();
         $query = $this->db->getLastQuery();
-        log_message('warning', $query->getQuery());
         return $results;
     }
 }

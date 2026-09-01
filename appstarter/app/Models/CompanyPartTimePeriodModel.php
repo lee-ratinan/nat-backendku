@@ -29,6 +29,79 @@ class CompanyPartTimePeriodModel extends Model
     protected $updatedField = 'updated_at';
     const ID_NONCE = 599;
 
+    private array $configurations = [
+        'id'                    => [
+            'type'  => 'hidden',
+            'label' => 'ID'
+        ],
+        'company_id'            => [
+            'type'     => 'select',
+            'label'    => 'Company',
+            'required' => true,
+            'options'  => []
+        ],
+        'period_start'          => [
+            'type'        => 'date',
+            'label'       => 'Start Date',
+            'required'    => true,
+            'placeholder' => 'Start Date'
+        ],
+        'period_end'            => [
+            'type'        => 'date',
+            'label'       => 'End Date',
+            'required'    => true,
+            'placeholder' => 'End Date'
+        ],
+        'actual_hours'          => [
+            'type'        => 'text',
+            'label'       => 'Actual Hours',
+            'required'    => false,
+            'placeholder' => 'Actual Hours'
+        ],
+        'subtotal_income'       => [
+            'type'        => 'text',
+            'label'       => 'Subtotal',
+            'required'    => false,
+            'placeholder' => 'Subtotal'
+        ],
+        'income_deduction'      => [
+            'type'        => 'text',
+            'label'       => 'CPF Deduction',
+            'required'    => false,
+            'placeholder' => 'CPF Deduction'
+        ],
+        'total_income'          => [
+            'type'        => 'text',
+            'label'       => 'Total Income',
+            'required'    => false,
+            'placeholder' => 'Total Income'
+        ],
+        'average_hourly_income' => [
+            'type'        => 'text',
+            'label'       => 'Average Hourly Income',
+            'required'    => false,
+            'placeholder' => 'Average Hourly Income'
+        ],
+        'google_drive_link'     => [
+            'type'        => 'text',
+            'label'       => 'Google Drive Link',
+            'required'    => false,
+            'placeholder' => 'Google Drive Link'
+        ]
+    ];
+
+    public function getConfigurations(): array
+    {
+        $configurations = $this->configurations;
+        // company_id
+        $company_model = new CompanyMasterModel();
+        $companies     = $company_model->select('id, company_trade_name')->findAll();
+        foreach ($companies as $company) {
+            $configurations['company_id']['options'][$company['id']] = $company['company_trade_name'];
+        }
+        return $configurations;
+    }
+
     public function applyFilter(string $start_date, string $end_date): void
     {
         if (!empty($start_date)) {
@@ -68,6 +141,7 @@ class CompanyPartTimePeriodModel extends Model
         $sum        = [
             'scheduled_hrs'    => 0.0,
             'actual_hrs'       => 0.0,
+            'diff'             => 0.0,
             'subtotal_income'  => 0.0,
             'income_deduction' => 0.0,
             'total_income'     => 0.0,
@@ -84,6 +158,18 @@ class CompanyPartTimePeriodModel extends Model
             $sum['total_income']     += $row['total_income'];
             $link                     = '<a class="btn btn-outline-primary" href="' . base_url($locale . '/office/employment/part-time/pay-period/edit/' . $id) . '"><i class="fa-solid fa-edit"></i></a>';
             $link                    .= (!empty($row['google_drive_link']) ? ' <a class="btn btn-outline-primary" href="' . $row['google_drive_link'] . '" target="_blank"><i class="fa-solid fa-file-pdf"></i></a>' : '');
+            $diff                     = 0;
+            if (0 < $row['actual_hours']) {
+                $diff                 = $row['actual_hours'] - $scheduled_hrs;
+            }
+            $sum['diff']             += $diff;
+            if ($diff < 0) {
+                $diff = '<span class="badge bg-danger float-end">' . number_format($diff, 2) . '</span>';
+            } elseif ($diff > 0) {
+                $diff = '<span class="badge bg-success float-end">+' . number_format($diff, 2) . '</span>';
+            } else {
+                $diff = '<span class="small float-end">n/a</span>';
+            }
             $result[]                 = [
                 $link,
                 $row['company_trade_name'],
@@ -91,6 +177,7 @@ class CompanyPartTimePeriodModel extends Model
                 date(DATE_FORMAT_UI, strtotime($row['period_end'])),
                 number_format($scheduled_hrs, 2),
                 number_format($row['actual_hours'] ?? 0, 2),
+                $diff,
                 number_format($row['subtotal_income'] ?? 0, 2),
                 number_format($row['income_deduction'] ?? 0, 2),
                 number_format($row['total_income'] ?? 0, 2),
@@ -104,6 +191,7 @@ class CompanyPartTimePeriodModel extends Model
             'Total',
             number_format($sum['scheduled_hrs'], 2),
             number_format($sum['actual_hrs'], 2),
+            number_format($sum['diff'], 2),
             number_format($sum['subtotal_income'], 2),
             number_format($sum['income_deduction'], 2),
             number_format($sum['total_income'], 2),

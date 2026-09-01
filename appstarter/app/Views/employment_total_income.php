@@ -106,7 +106,7 @@ $this->extend($layout);
                 fixedHeader: true,
                 searching: true,
                 pageLength: 25,
-                order: [[1, 'asc']]
+                order: [[2, 'desc']]
             });
         });
     </script>

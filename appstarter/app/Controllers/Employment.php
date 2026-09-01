@@ -2059,23 +2059,21 @@ class Employment extends BaseController
             if (0 < $id) {
                 if ($pt_model->update($id, $data)) {
                     $log_model->insertTableUpdate('company_pt_schedule', $id, $data, $session->user_id);
-                    $new_id = $id * $pt_model::ID_NONCE;
                     return $this->response->setJSON([
                         'status'   => 'success',
                         'toast'    => 'Successfully updated the part-time schedule.',
-                        'redirect' => base_url($session->locale . '/office/employment/part-time/edit/' . $new_id)
+                        'redirect' => base_url($session->locale . '/office/employment/part-time')
                     ]);
                 }
             } else {
                 $data['created_by'] = $session->user_id;
                 // INSERT
                 if ($id = $pt_model->insert($data)) {
-                    $log_model->insertTableUpdate('company_master', $id, $data, $session->user_id);
-                    $new_id = $id * $pt_model::ID_NONCE;
+                    $log_model->insertTableUpdate('company_pt_schedule', $id, $data, $session->user_id);
                     return $this->response->setJSON([
                         'status'   => 'success',
-                        'toast'    => 'Successfully created new part-time schedule..',
-                        'redirect' => base_url($session->locale . '/office/employment/part-time/edit/' . $new_id)
+                        'toast'    => 'Successfully created new part-time schedule.',
+                        'redirect' => base_url($session->locale . '/office/employment/part-time')
                     ]);
                 }
             }
@@ -2107,16 +2105,16 @@ class Employment extends BaseController
     {
         $model              = new CompanyPartTimePeriodModel();
         $columns            = [
-            'company_trade_name',
+            '',
             'period_start',
             'period_end',
             'scheduled_hours',
             'actual_hours',
-            'subtotal_income',
-            'income_deduction',
-            'total_income',
-            'average_hourly_income',
-            'google_drive_link',
+            '',
+            '',
+            '',
+            '',
+            '',
         ];
         $order              = $this->request->getPost('order');
         $start              = $this->request->getPost('start');
@@ -2124,6 +2122,9 @@ class Employment extends BaseController
         $order_column_index = $order[0]['column'] ?? 0;
         $order_column       = $columns[$order_column_index];
         $order_direction    = $order[0]['dir'] ?? 'desc';
+        if (empty($order_column)) {
+            $order_column = $columns[2];
+        }
         $start_date         = $this->request->getPost('start_date');
         $end_date           = $this->request->getPost('end_date');
         $result             = $model->getDataTables($start, $length, $order_column, $order_direction, $start_date, $end_date);
@@ -2134,6 +2135,34 @@ class Employment extends BaseController
             'data'            => $result['data'],
             'footer'          => $result['footer']
         ]);
+    }
+
+    public function partTimePayPeriodEdit(int|string $period_id): string
+    {
+        $lang  = $this->request->getLocale();
+        $model = new CompanyPartTimePeriodModel();
+        $mode  = 'edit';
+        $row   = [];
+        $page  = 'Edit Part Time Period';
+        if ('new' == $period_id) {
+            $mode      = 'new';
+            $period_id = 0;
+            $page      = 'New Part Time Period';
+        } else {
+            $period_id = $period_id/$model::ID_NONCE;
+            $row       = $model->find($period_id);
+        }
+        $data = [
+            'lang'       => $lang,
+            'page_title' => $page,
+            'slug_group' => 'employment',
+            'slug'       => '/office/employment/part-time/period/edit',
+            'config'     => $model->getConfigurations(),
+            'mode'       => $mode,
+            'id'         => $period_id,
+            'row'        => $row,
+        ];
+        return view('employment_part_time_period_edit', $data);
     }
 
 }

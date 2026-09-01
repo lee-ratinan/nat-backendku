@@ -48,8 +48,9 @@ $this->extend($layout);
                                     <th>End</th>
                                     <th>Scheduled<br/>(hrs)</th>
                                     <th>Recorded<br/>(hrs)</th>
+                                    <th class="text-end">diff<br/>(hrs)</th>
                                     <th>Subtotal<br/>($)</th>
-                                    <th>Deduction<br/>($)</th>
+                                    <th>CPF<br/>($)</th>
                                     <th>Total<br/>($)</th>
                                     <th>Average<br/>($/hr)</th>
                                 </tr>
@@ -63,6 +64,7 @@ $this->extend($layout);
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th class="text-end"></th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -99,7 +101,7 @@ $this->extend($layout);
                 order: [[2, 'desc']],
                 footerCallback: function () {
                     let api = this.api();
-                    for (let i = 0; i <= 7; i++) {
+                    for (let i = 0; i <= 8; i++) {
                         api.column(i).footer().innerHTML = serverFooter[i];
                     }
                 }
