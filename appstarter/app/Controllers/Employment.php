@@ -2221,4 +2221,22 @@ class Employment extends BaseController
         }
     }
 
+    public function partTimeStatistics(): string
+    {
+        $lang      = $this->request->getLocale();
+        $ptp_model = new CompanyPartTimePeriodModel();
+        $periods   = $ptp_model->findAll();
+        $results   = [];
+        foreach ($periods as $row) {
+            $results[$row['id']] = date(DATE_FORMAT_UI, strtotime($row['period_start'])) . ' - ' . date(DATE_FORMAT_UI, strtotime($row['period_end']));
+        }
+        $data = [
+            'lang'       => $lang,
+            'page_title' => 'Part Time Schedule',
+            'slug_group' => 'employment',
+            'slug'       => '/office/employment/part-time',
+            'periods'    => $results,
+        ];
+        return view('employment_part_time_statistics', $data);
+    }
 }
