@@ -13,6 +13,7 @@
  | NOTE: changing this will require manually modifying the
  | existing namespaces of App\* namespaced-classes.
  */
+date_default_timezone_set('UTC');
 defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
 
 /*
@@ -77,3 +78,42 @@ defined('EXIT_USER_INPUT')     || define('EXIT_USER_INPUT', 7);     // invalid u
 defined('EXIT_DATABASE')       || define('EXIT_DATABASE', 8);       // database error
 defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
+
+/**
+ * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_LOW instead.
+ */
+define('EVENT_PRIORITY_LOW', 200);
+
+/**
+ * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_NORMAL instead.
+ */
+define('EVENT_PRIORITY_NORMAL', 100);
+
+/**
+ * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
+ */
+define('EVENT_PRIORITY_HIGH', 10);
+
+/**
+ * Self defined constants
+ */
+const ORGANIZATION_ID = 1;
+const DATE_FORMAT_DB = 'Y-m-d';
+const DATETIME_FORMAT_DB = 'Y-m-d H:i:s';
+const DATETIME_FORMAT_LUXON = 'Y-m-d\TH:i:s\Z';
+const DATE_FORMAT_UI = 'j M Y';
+const MONTH_FORMAT_UI = 'M Y';
+const TIME_FORMAT_UI = 'h:i a';
+const DATETIME_FORMAT_UI = 'j M Y h:i a';
+
+// PERMISSION
+const PERMISSION_NOT_PERMITTED = '0';
+const PERMISSION_READ_ONLY = '1';
+const PERMISSION_EDITABLE = '2';
+
+// HTTP STATUS CODE
+const HTTP_STATUS_BAD_REQUEST = 400;
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_NOT_PERMITTED = 403;
+const HTTP_STATUS_PAGE_NOT_FOUND = 404;
+const HTTP_STATUS_SOMETHING_WRONG = 500;
