@@ -95,7 +95,7 @@ define('EVENT_PRIORITY_NORMAL', 100);
 define('EVENT_PRIORITY_HIGH', 10);
 
 /**
- * Self defined constants
+ * Self-defined constants
  */
 const ORGANIZATION_ID = 1;
 const DATE_FORMAT_DB = 'Y-m-d';
@@ -103,8 +103,8 @@ const DATETIME_FORMAT_DB = 'Y-m-d H:i:s';
 const DATETIME_FORMAT_LUXON = 'Y-m-d\TH:i:s\Z';
 const DATE_FORMAT_UI = 'j M Y';
 const MONTH_FORMAT_UI = 'M Y';
-const TIME_FORMAT_UI = 'h:i a';
-const DATETIME_FORMAT_UI = 'j M Y h:i a';
+const TIME_FORMAT_UI = 'g:i a';
+const DATETIME_FORMAT_UI = 'j M Y g:i a';
 
 // PERMISSION
 const PERMISSION_NOT_PERMITTED = '0';

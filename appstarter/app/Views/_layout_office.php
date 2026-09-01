@@ -81,6 +81,7 @@
                                     '/office/employment/freelance-income/stats' => '<i class="fa-solid fa-fw fa-chart-line"></i> Statistics',
                                     '/office/employment/part-time'              => 'Part-Time Job',
                                     '/office/employment/part-time/pay-period'   => '<i class="fa-solid fa-fw fa-calendar-check"></i> Part-Time Pay Period',
+                                    '/office/employment/part-time/calendar'     => '<i class="fa-solid fa-fw fa-calendar"></i> Calendar',
                                     '/office/employment/part-time/stats'        => '<i class="fa-solid fa-fw fa-chart-bar"></i> Statistics',
                                     '/office/employment/cpf'                    => 'CPF',
                                     '/office/employment/cpf/contribution'       => '<i class="fa-solid fa-fw fa-chart-bar"></i> CPF Contribution',

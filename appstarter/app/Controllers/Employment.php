@@ -2232,11 +2232,50 @@ class Employment extends BaseController
         }
         $data = [
             'lang'       => $lang,
-            'page_title' => 'Part Time Schedule',
+            'page_title' => 'Part Time Statistics',
             'slug_group' => 'employment',
-            'slug'       => '/office/employment/part-time',
+            'slug'       => '/office/employment/part-time/stats',
             'periods'    => $results,
         ];
         return view('employment_part_time_statistics', $data);
+    }
+
+    public function partTimeCalendar(string $month = ''): string
+    {
+        $lang      = $this->request->getLocale();
+        if (empty($month)) {
+            $month = date('Y-m');
+        }
+        $m_obj     = strtotime($month . '-01');
+        $start     = date(DATE_FORMAT_DB, $m_obj) . ' 00:00:00';
+        $end       = date('Y-m-t', $m_obj) . ' 23:59:59';
+        $pts_model = new CompanyPartTimeScheduleModel();
+        $schedules = $pts_model->where('scheduled_start >=', $start)
+            ->where('scheduled_end <=', $end)
+            ->orderBy('scheduled_start', 'ASC')
+            ->findAll();
+        $calendar  = [];
+        foreach ($schedules as $day) {
+            $date = date('j', strtotime($day['scheduled_start']));
+            $calendar[$date] = [
+                'start'    => date(TIME_FORMAT_UI, strtotime($day['scheduled_start'])),
+                'end'      => date(TIME_FORMAT_UI, strtotime($day['scheduled_end'])),
+                'hours'    => $day['scheduled_hours'],
+                'break'    => $day['scheduled_break'],
+                'location' => $day['work_location'],
+            ];
+        }
+        $data      = [
+            'lang'       => $lang,
+            'page_title' => 'Part Time Calendar',
+            'slug_group' => 'employment',
+            'slug'       => '/office/employment/part-time/calendar',
+            'yyyymm'     => $month,
+            'month'      => date('M Y', $m_obj),
+            'calendar'   => $calendar,
+            'day_count'  => date('t', $m_obj),
+            'dow_first'  => date('N', $m_obj),
+        ];
+        return view('employment_part_time_calendar', $data);
     }
 }
