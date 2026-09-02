@@ -2228,14 +2228,19 @@ class Employment extends BaseController
         $periods   = $ptp_model->findAll();
         $results   = [];
         foreach ($periods as $row) {
-            $results[$row['id']] = date(DATE_FORMAT_UI, strtotime($row['period_start'])) . ' - ' . date(DATE_FORMAT_UI, strtotime($row['period_end']));
+            $results[] = [
+                'date'     => date('d M Y', strtotime($row['period_end'])),
+                'subtotal' => floatval($row['subtotal_income']),
+                'total'    => floatval($row['total_income'])
+            ];
         }
         $data = [
             'lang'       => $lang,
             'page_title' => 'Part Time Statistics',
             'slug_group' => 'employment',
             'slug'       => '/office/employment/part-time/stats',
-            'periods'    => $results,
+            'chart_data' => $results,
+            'height'     => count($results) * 30 . 'px'
         ];
         return view('employment_part_time_statistics', $data);
     }

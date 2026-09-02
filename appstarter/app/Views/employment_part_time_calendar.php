@@ -23,7 +23,7 @@ $this->extend($layout);
             <div class="col">
                 <div class="card">
                     <div class="card-body pt-3">
-                        <h5>Part-Time Calendar</h5>
+                        <h5 class="card-title">Part-Time Calendar</h5>
                         <div class="row">
                             <div class="col">
                                 <label for="month">Month</label>

@@ -74,7 +74,6 @@ $this->extend($layout);
                         }
                         echo '<div class="text-end"><button class="btn btn-primary btn-sm" id="btn-save-snapshot"><i class="fa-solid fa-save"></i> Save</button></div>';
                         ?>
-
                         <script>
                             <?php echo generate_line_chart_script($chart_data, 'chartdiv', 'date', 'value');?>
                         </script>

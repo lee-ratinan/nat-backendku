@@ -23,7 +23,7 @@ $this->extend($layout);
                         <div class="text-end">
                             <a class="btn btn-outline-primary btn-sm" href="<?= base_url($session->locale . '/office/employment/part-time/pay-period/edit/new') ?>"><i class="fa-solid fa-plus-circle"></i> New Period</a>
                         </div>
-                        <h5>Part-Time Pay Period</h5>
+                        <h5 class="card-title">Part-Time Pay Period</h5>
                         <div class="row g-3 mb-3">
                             <div class="col">
                                 <label for="start_date">Start Date</label><br/><input class="form-control" type="date" id="start_date" name="start_date" placeholder="Start Date" min="2026-04-01" max="<?= date('Y-m-d') ?>" />
