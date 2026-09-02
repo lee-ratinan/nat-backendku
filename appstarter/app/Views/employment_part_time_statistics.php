@@ -58,20 +58,40 @@ $this->extend($layout);
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach ($deductions as $month => $deduction): ?>
+                                        <?php foreach ($table as $month => $values) : ?>
                                         <tr>
                                             <td><?= date('M Y', strtotime($month . '-01')) ?></td>
-                                            <td class="text-end"><?= number_format($subtotals[$month], 2) ?></td>
-                                            <td class="text-end"><?= number_format($deduction, 2) ?></td>
-                                            <td class="text-end">
+                                            <td>
                                                 <?php
-                                                if (0 < $subtotals[$month]) {
-                                                    $percent = $deduction * 100 / $subtotals[$month];
-                                                    echo number_format($percent, 2) . '%';
+                                                $sum_subtotal = 0.0;
+                                                foreach ($values['subtotal'] as $subtotal) {
+                                                    $sum_subtotal += $subtotal;
+                                                    echo '+ ' . currency_format('SGD', $subtotal) . '<br/>';
                                                 }
+                                                echo '<b>= ' . currency_format('SGD', $sum_subtotal) . '</b>';
                                                 ?>
                                             </td>
-                                            <td class="text-end"><?= number_format($totals[$month], 2) ?></td>
+                                            <td>
+                                                <?php
+                                                $sum_deduction = 0.0;
+                                                foreach ($values['deduction'] as $deduction) {
+                                                    $sum_deduction += $deduction;
+                                                    echo '+ ' . currency_format('SGD', $deduction) . '<br/>';
+                                                }
+                                                echo '<b>= ' . currency_format('SGD', $sum_deduction) . '</b>';
+                                                ?>
+                                            </td>
+                                            <td><?= ($sum_subtotal > 0 ? number_format($sum_deduction * 100 / $sum_subtotal, 2) : 0) ?>%</td>
+                                            <td>
+                                                <?php
+                                                $sum_total = 0.0;
+                                                foreach ($values['total'] as $total) {
+                                                    $sum_total += $total;
+                                                    echo '+ ' . currency_format('SGD', $total) . '<br/>';
+                                                }
+                                                echo '<b>= ' . currency_format('SGD', $sum_total) . '</b>';
+                                                ?>
+                                            </td>
                                         </tr>
                                         <?php endforeach; ?>
                                         </tbody>

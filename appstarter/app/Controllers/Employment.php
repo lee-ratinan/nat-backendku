@@ -2242,8 +2242,7 @@ class Employment extends BaseController
         $ptp_model  = new CompanyPartTimePeriodModel();
         $periods    = $ptp_model->findAll();
         $results    = [];
-        $subtotals  = [];
-        $deductions = [];
+        $table      = [];
         $totals     = [];
         $monthly    = [];
         foreach ($periods as $row) {
@@ -2254,10 +2253,11 @@ class Employment extends BaseController
                 'total'    => floatval($row['total_income'])
             ];
             // deductions
-            $month              = date('Y-m', strtotime($row['period_end']));
-            $subtotals[$month]  = (isset($subtotals[$month])) ? $subtotals[$month] + floatval($row['subtotal_income']) : floatval($row['subtotal_income']);
-            $deductions[$month] = (isset($deductions[$month]) ? $deductions[$month] + floatval($row['income_deduction']) : floatval($row['income_deduction']));
-            $totals[$month]     = (isset($totals[$month]) ? $totals[$month] + floatval($row['total_income']) : floatval($row['total_income']));
+            $month                        = date('Y-m', strtotime($row['period_end']));
+            $table[$month]['subtotal'][]  = floatval($row['subtotal_income']);
+            $table[$month]['deduction'][] = floatval($row['income_deduction']);
+            $table[$month]['total'][]     = floatval($row['total_income']);
+            $totals[$month]               = (isset($totals[$month]) ? $totals[$month] + floatval($row['total_income']) : floatval($row['total_income']));
         }
         foreach ($totals as $month => $total) {
             $monthly[] = [
@@ -2272,8 +2272,7 @@ class Employment extends BaseController
             'slug'           => '/office/employment/part-time/stats',
             'chart_data'     => $results,
             'height'         => count($results) * 40 . 'px',
-            'subtotals'      => $subtotals,
-            'deductions'     => $deductions,
+            'table'          => $table,
             'totals'         => $totals,
             'monthly'        => $monthly,
             'monthly_height' => count($monthly) * 40 . 'px',
