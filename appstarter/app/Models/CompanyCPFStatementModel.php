@@ -40,10 +40,10 @@ class CompanyCPFStatementModel extends Model
     ];
 
     /**
-     * @param string|null $key
+     * @param string $key
      * @return array|array[]
      */
-    public function getConfiguration(string $key = null): array
+    public function getConfiguration(string $key = ''): array
     {
         $year_options = [];
         for ($year = date('Y')-2; $year <= date('Y'); $year++) {
@@ -51,7 +51,7 @@ class CompanyCPFStatementModel extends Model
         }
         $configurations = $this->configurations;
         $configurations['statement_year']['options'] = $year_options;
-        if (!is_null($key) && array_key_exists($key, $configurations)) {
+        if (!empty($key) && array_key_exists($key, $configurations)) {
             return $configurations[$key];
         }
         return $configurations;
