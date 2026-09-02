@@ -2057,13 +2057,25 @@ class Employment extends BaseController
         }
         try {
             if (0 < $id) {
-                if ($pt_model->update($id, $data)) {
-                    $log_model->insertTableUpdate('company_pt_schedule', $id, $data, $session->user_id);
-                    return $this->response->setJSON([
-                        'status'   => 'success',
-                        'toast'    => 'Successfully updated the part-time schedule.',
-                        'redirect' => base_url($session->locale . '/office/employment/part-time')
-                    ]);
+                if ($data['scheduled_start'] == $data['scheduled_end']) {
+                    // DELETE CASE
+                    if ($pt_model->delete($id)) {
+                        $log_model->insertTableUpdate('company_pt_schedule', $id, [], $session->user_id);
+                        return $this->response->setJSON([
+                            'status'   => 'success',
+                            'toast'    => 'Successfully deleted the part-time schedule.',
+                            'redirect' => base_url($session->locale . '/office/employment/part-time')
+                        ]);
+                    }
+                } else {
+                    if ($pt_model->update($id, $data)) {
+                        $log_model->insertTableUpdate('company_pt_schedule', $id, $data, $session->user_id);
+                        return $this->response->setJSON([
+                            'status'   => 'success',
+                            'toast'    => 'Successfully updated the part-time schedule.',
+                            'redirect' => base_url($session->locale . '/office/employment/part-time')
+                        ]);
+                    }
                 }
             } else {
                 $data['created_by'] = $session->user_id;
