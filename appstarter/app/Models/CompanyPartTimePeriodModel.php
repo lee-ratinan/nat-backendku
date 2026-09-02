@@ -170,6 +170,13 @@ class CompanyPartTimePeriodModel extends Model
             } else {
                 $diff = '<span class="small float-end">n/a</span>';
             }
+            $deduct_percent           = '';
+            if (0 < $row['subtotal_income']) {
+                $deduct_percent       = '0.00%';
+                if (0 < $row['income_deduction']) {
+                    $deduct_percent = number_format($row['income_deduction'] * 100 / $row['subtotal_income'], 2) . '%';
+                }
+            }
             $result[]                 = [
                 $link,
                 $row['company_trade_name'],
@@ -180,6 +187,7 @@ class CompanyPartTimePeriodModel extends Model
                 $diff,
                 number_format($row['subtotal_income'] ?? 0, 2),
                 number_format($row['income_deduction'] ?? 0, 2),
+                $deduct_percent,
                 number_format($row['total_income'] ?? 0, 2),
                 number_format($row['average_hourly_income'] ?? 0, 2),
             ];
@@ -194,8 +202,8 @@ class CompanyPartTimePeriodModel extends Model
             number_format($sum['diff'], 2),
             number_format($sum['subtotal_income'], 2),
             number_format($sum['income_deduction'], 2),
-            number_format($sum['total_income'], 2),
             '',
+            number_format($sum['total_income'], 2),
             ''
         ];
         return [

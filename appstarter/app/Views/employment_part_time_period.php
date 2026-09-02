@@ -51,6 +51,7 @@ $this->extend($layout);
                                     <th style="min-width:75px;" class="text-end">diff<br/>(hrs)</th>
                                     <th style="min-width:100px;">Subtotal<br/>($)</th>
                                     <th style="min-width:100px;">CPF<br/>($)</th>
+                                    <th style="min-width:100px;">CPF<br/>(%)</th>
                                     <th style="min-width:100px;">Total<br/>($)</th>
                                     <th style="min-width:100px;">Average<br/>($/hr)</th>
                                 </tr>
@@ -65,6 +66,9 @@ $this->extend($layout);
                                     <th></th>
                                     <th></th>
                                     <th class="text-end"></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -98,10 +102,13 @@ $this->extend($layout);
                         return json.data;
                     }
                 },
-                order: [[2, 'desc']],
+                ordering: false,
                 footerCallback: function () {
                     let api = this.api();
-                    for (let i = 0; i <= 8; i++) {
+                    for (let i = 0; i <= 11; i++) {
+                        // console.log('at' + i);
+                        // console.log(serverFooter[i]);
+                        // console.log(api.column(i).footer());
                         api.column(i).footer().innerHTML = serverFooter[i];
                     }
                 }

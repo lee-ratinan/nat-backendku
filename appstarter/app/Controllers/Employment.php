@@ -2104,27 +2104,10 @@ class Employment extends BaseController
     public function partTimePayPeriodList(): ResponseInterface
     {
         $model              = new CompanyPartTimePeriodModel();
-        $columns            = [
-            '',
-            'period_start',
-            'period_end',
-            'scheduled_hours',
-            'actual_hours',
-            '',
-            '',
-            '',
-            '',
-            '',
-        ];
-        $order              = $this->request->getPost('order');
         $start              = $this->request->getPost('start');
         $length             = $this->request->getPost('length');
-        $order_column_index = $order[0]['column'] ?? 0;
-        $order_column       = $columns[$order_column_index];
-        $order_direction    = $order[0]['dir'] ?? 'desc';
-        if (empty($order_column)) {
-            $order_column = $columns[2];
-        }
+        $order_column       = 'period_start';
+        $order_direction    = 'desc';
         $start_date         = $this->request->getPost('start_date');
         $end_date           = $this->request->getPost('end_date');
         $result             = $model->getDataTables($start, $length, $order_column, $order_direction, $start_date, $end_date);
@@ -2223,24 +2206,45 @@ class Employment extends BaseController
 
     public function partTimeStatistics(): string
     {
-        $lang      = $this->request->getLocale();
-        $ptp_model = new CompanyPartTimePeriodModel();
-        $periods   = $ptp_model->findAll();
-        $results   = [];
+        $lang       = $this->request->getLocale();
+        $ptp_model  = new CompanyPartTimePeriodModel();
+        $periods    = $ptp_model->findAll();
+        $results    = [];
+        $subtotals  = [];
+        $deductions = [];
+        $totals     = [];
+        $monthly    = [];
         foreach ($periods as $row) {
+            // chart
             $results[] = [
                 'date'     => date('d M Y', strtotime($row['period_end'])),
                 'subtotal' => floatval($row['subtotal_income']),
                 'total'    => floatval($row['total_income'])
             ];
+            // deductions
+            $month              = date('Y-m', strtotime($row['period_end']));
+            $subtotals[$month]  = (isset($subtotals[$month])) ? $subtotals[$month] + floatval($row['subtotal_income']) : floatval($row['subtotal_income']);
+            $deductions[$month] = (isset($deductions[$month]) ? $deductions[$month] + floatval($row['income_deduction']) : floatval($row['income_deduction']));
+            $totals[$month]     = (isset($totals[$month]) ? $totals[$month] + floatval($row['total_income']) : floatval($row['total_income']));
+        }
+        foreach ($totals as $month => $total) {
+            $monthly[] = [
+                'month' => date('M Y', strtotime($month . '-01')),
+                'total' => $total,
+            ];
         }
         $data = [
-            'lang'       => $lang,
-            'page_title' => 'Part Time Statistics',
-            'slug_group' => 'employment',
-            'slug'       => '/office/employment/part-time/stats',
-            'chart_data' => $results,
-            'height'     => count($results) * 30 . 'px'
+            'lang'           => $lang,
+            'page_title'     => 'Part Time Statistics',
+            'slug_group'     => 'employment',
+            'slug'           => '/office/employment/part-time/stats',
+            'chart_data'     => $results,
+            'height'         => count($results) * 40 . 'px',
+            'subtotals'      => $subtotals,
+            'deductions'     => $deductions,
+            'totals'         => $totals,
+            'monthly'        => $monthly,
+            'monthly_height' => count($monthly) * 40 . 'px',
         ];
         return view('employment_part_time_statistics', $data);
     }
@@ -2261,7 +2265,7 @@ class Employment extends BaseController
             ->findAll();
         $calendar  = [];
         foreach ($schedules as $day) {
-            $date = date('j', strtotime($day['scheduled_start']));
+            $date            = date('j', strtotime($day['scheduled_start']));
             $calendar[$date] = [
                 'start'    => date(TIME_FORMAT_UI, strtotime($day['scheduled_start'])),
                 'end'      => date(TIME_FORMAT_UI, strtotime($day['scheduled_end'])),
