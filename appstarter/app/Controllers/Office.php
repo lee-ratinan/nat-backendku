@@ -12,6 +12,7 @@
 namespace App\Controllers;
 
 use App\Models\CompanyFreelanceIncomeModel;
+use App\Models\CompanyPartTimePeriodModel;
 use App\Models\CompanySalaryModel;
 use App\Models\JourneyHolidayModel;
 use App\Models\LogActivityModel;
@@ -43,8 +44,10 @@ class Office extends BaseController
         $year           = date('Y');
         $salary_model   = new CompanySalaryModel();
         $fl_ic_model    = new CompanyFreelanceIncomeModel();
+        $pt_model       = new CompanyPartTimePeriodModel();
         $salary_records = $salary_model->where('tax_year', $year)->findAll();
         $fl_ic_records  = $fl_ic_model->where('pay_date >=', $year . '-01-01')->findAll();
+        $pt_records     = $pt_model->where('period_end >=', $year . '-01-01')->findAll();
         $ytd_records    = [];
         $ytd_currencies = [];
         $ytd_totals     = [];
@@ -64,6 +67,14 @@ class Office extends BaseController
                 'type'     => 'F',
                 'subtotal' => $row['subtotal_amount'],
                 'total'    => $row['total_amount'],
+            ];
+        }
+        foreach ($pt_records as $row) {
+            $ytd_records['SGD'][]  = [
+                'date'     => $row['period_end'],
+                'type'     => 'P',
+                'subtotal' => $row['subtotal_income'],
+                'total'    => $row['total_income'],
             ];
         }
         ksort($ytd_currencies);
