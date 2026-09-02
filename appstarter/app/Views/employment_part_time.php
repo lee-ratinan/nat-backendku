@@ -50,16 +50,16 @@ $this->extend($layout);
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-borderless table-striped table-hover dttable">
+                            <table class="table table-borderless table-striped table-hover dttable w-100">
                                 <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>Period</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Scheduled (hrs)</th>
-                                    <th>Break (hrs)</th>
-                                    <th>Location</th>
+                                    <th style="width:50px;"></th>
+                                    <th style="min-width:200px;">Period</th>
+                                    <th style="min-width:200px;">Start</th>
+                                    <th style="min-width:125px;">End</th>
+                                    <th style="min-width:140px;">Scheduled (hrs)</th>
+                                    <th style="min-width:130px;">Break (hrs)</th>
+                                    <th style="min-width:130px;">Location</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>

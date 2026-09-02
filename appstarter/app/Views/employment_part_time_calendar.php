@@ -6,7 +6,7 @@ $this->extend($layout);
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
     <style>
-        th {text-align:center;width:14.28%;}
+        th {min-width:185px;text-align:center;width:14.28%;}
     </style>
     <div class="pagetitle">
         <h1><?= $page_title ?></h1>
@@ -60,7 +60,7 @@ $this->extend($layout);
                                     for ($j = 1; $j <= $day_count; $j++) {
                                         if (isset($calendar[$j])) {
                                             echo '<td>';
-                                            echo '<h6 class="text-end">' . $j . '</h6>';
+                                            echo '<h4 class="float-end">' . $j . '</h4>';
                                             echo '<i class="fa-solid fa-clock fa-fw"></i> ' . $calendar[$j]['start'] . '<br/><i class="fa-solid fa-chevron-right fa-fw"></i> ' . $calendar[$j]['end'] . '<br/>';
                                             echo '<i class="fa-solid fa-minus fa-fw"></i> ' . number_format($calendar[$j]['hours'], 2) . 'h';
                                             if (0 < $calendar[$j]['break']) {
@@ -69,7 +69,7 @@ $this->extend($layout);
                                             echo '<br/><i class="fa-solid fa-location fa-fw"></i> ' . $calendar[$j]['location'];
                                             echo '</td>';
                                         } else {
-                                            echo '<td class="bg-secondary"><h6 class="text-end">' . $j . '</h6><br/><br/><br/></td>';
+                                            echo '<td class="bg-secondary text-black"><h4 class="text-end">' . $j . '</h4><br/><br/><br/></td>';
                                         }
                                         if ($i == 7) {
                                             echo '</tr><tr>';

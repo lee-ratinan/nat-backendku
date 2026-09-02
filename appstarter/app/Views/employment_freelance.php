@@ -90,7 +90,7 @@ $this->extend($layout);
                         d.year = $('#year').val();
                     }
                 },
-                order: [[1, 'asc']],
+                order: [[5, 'desc']],
                 columnDefs: [{orderable: false, targets: 0}],
                 fixedColumns: {start:2},
                 scrollX: true,

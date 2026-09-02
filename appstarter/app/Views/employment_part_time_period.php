@@ -39,20 +39,20 @@ $this->extend($layout);
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-borderless table-striped table-hover dttable">
+                            <table class="table table-borderless table-striped table-hover dttable w-100">
                                 <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>Company</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Scheduled<br/>(hrs)</th>
-                                    <th>Recorded<br/>(hrs)</th>
-                                    <th class="text-end">diff<br/>(hrs)</th>
-                                    <th>Subtotal<br/>($)</th>
-                                    <th>CPF<br/>($)</th>
-                                    <th>Total<br/>($)</th>
-                                    <th>Average<br/>($/hr)</th>
+                                    <th style="min-width:125px;"></th>
+                                    <th style="min-width:125px;">Company</th>
+                                    <th style="min-width:130px;">Start</th>
+                                    <th style="min-width:130px;">End</th>
+                                    <th style="min-width:100px;">Scheduled<br/>(hrs)</th>
+                                    <th style="min-width:100px;">Recorded<br/>(hrs)</th>
+                                    <th style="min-width:75px;" class="text-end">diff<br/>(hrs)</th>
+                                    <th style="min-width:100px;">Subtotal<br/>($)</th>
+                                    <th style="min-width:100px;">CPF<br/>($)</th>
+                                    <th style="min-width:100px;">Total<br/>($)</th>
+                                    <th style="min-width:100px;">Average<br/>($/hr)</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
