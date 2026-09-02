@@ -1111,6 +1111,7 @@ class Employment extends BaseController
         $cpf_model     = new CompanyCPFModel();
         $company_model = new CompanyMasterModel();
         $salary_model  = new CompanySalaryModel();
+        $pt_model      = new CompanyPartTimePeriodModel();
         $company_raw   = $company_model
             ->where('company_country_code', 'SG')
             ->groupStart()
@@ -1196,6 +1197,25 @@ class Employment extends BaseController
                 'salary'  => $row['subtotal_amount'],
                 'cpf_amt' => $row['provident_fund_amount'],
             ];
+        }
+        // PROCESS PT (SG)
+        $pt_raw  = $pt_model->select('company_pt_period.*, company_master.company_trade_name, company_master.company_country_code')
+            ->join('company_master', 'company_master.id = company_pt_period.company_id')
+            ->where('company_master.company_country_code', 'SG')
+            ->findAll();
+        $pt_recs = [];
+        foreach ($pt_raw as $row) {
+            $pt_month = substr($row['period_start'], 0, 7);
+            $pt_recs[$row['company_id']][$pt_month]['salary'][]  = $row['subtotal_income'];
+            $pt_recs[$row['company_id']][$pt_month]['cpf_amt'][] = -$row['income_deduction'];
+        }
+        foreach ($pt_recs as $company_id => $pt_rec_months) {
+            foreach ($pt_rec_months as $pt_month => $pt_rec) {
+                $salary_records_salary[$pt_month][$company_id][] = [
+                    'salary'  => array_sum($pt_rec['salary']),
+                    'cpf_amt' => array_sum($pt_rec['cpf_amt']),
+                ];
+            }
         }
         // DATA
         $data = [

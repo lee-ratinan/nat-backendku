@@ -36,15 +36,15 @@ class CompanyCPFInvestmentSnapshotModel extends Model
     ];
 
     /**
-     * @param string|null $key
+     * @param string $key
      * @return array|array[]
      */
-    public function getConfiguration(string $key = null): array
+    public function getConfiguration(string $key = ''): array
     {
         $configurations = $this->configurations;
         $configurations['snapshot_date']['default'] = date(DATE_FORMAT_DB);
         $configurations['snapshot_date']['max']     = date(DATE_FORMAT_DB);
-        if (!is_null($key) && array_key_exists($key, $configurations)) {
+        if (!empty($key) && array_key_exists($key, $configurations)) {
             return $configurations[$key];
         }
         return $configurations;
