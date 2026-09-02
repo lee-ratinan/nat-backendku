@@ -301,6 +301,15 @@ $routes->group('{locale}/office', ['filter' => 'auth'], static function ($routes
     // PHQ-9
     $routes->get('health/phq9', 'Health::phq9');
     $routes->post('health/phq9', 'Health::phq9List');
+    // Anticipation
+    $routes->get('anticipation', 'Anticipation::index');
+    $routes->post('anticipation', 'Anticipation::list');
+    $routes->get('anticipation/edit/(:num)', 'Anticipation::edit/$1');
+    $routes->post('anticipation/save', 'Anticipation::save');
+    $routes->get('anticipation/to-dos', 'Anticipation::toDos');
+    $routes->post('anticipation/to-dos', 'Anticipation::toDosList');
+    $routes->get('anticipation/to-dos/edit/(:num)', 'Anticipation::toDosEdit/$1');
+    $routes->post('anticipation/to-dos/save', 'Anticipation::toDosSave');
 });
 
 // for preflight API calls

@@ -188,6 +188,14 @@
                                     '/office/health/ooca/statistics' => '<i class="fa-solid fa-chart-bar"></i> OOCA Statistics',
                                 ]
                             ],
+                            [
+                                'id'    => 'health-anticipation',
+                                'group' => '<i class="fa-solid fa-heart fa-fw"></i> Anticipation',
+                                'items' => [
+                                    '/office/anticipation'       => 'Anticipation',
+                                    '/office/anticipation/to-do' => 'To-Dos'
+                                ]
+                            ],
                         ]
                     ],
                     [
