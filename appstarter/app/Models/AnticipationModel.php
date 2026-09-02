@@ -86,8 +86,8 @@ class AnticipationModel extends Model
             'label'    => 'Favorite',
             'required' => true,
             'options'  => [
-                'Y' => 'FAVORITE',
-                'N' => 'Not that much...'
+                'Y' => 'Favorite',
+                'N' => 'Not Favorite'
             ]
         ],
         'item_status'           => [

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\AnticipationModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Anticipation extends BaseController
@@ -9,7 +10,16 @@ class Anticipation extends BaseController
 
     public function index(): string
     {
-        $data = [];
+        $lang       = $this->request->getLocale();
+        $model      = new AnticipationModel();
+        $data = [
+            'lang'       => $lang,
+            'page_title' => 'Anticipation',
+            'slug_group' => 'anticipation',
+            'slug'       => '/office/anticipation',
+            'categories' => $model->getAnticipationCategoryOptions(),
+            'statuses'   => $model->getItemStatusOptions()
+        ];
         return view('anticipation', $data);
     }
 
