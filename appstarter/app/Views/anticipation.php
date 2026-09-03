@@ -60,17 +60,18 @@ $this->extend($layout);
                                 <thead>
                                 <tr>
                                     <th style="width:50px;"></th>
-                                    <th style="min-width:200px;">Period</th>
-                                    <th style="min-width:200px;">Start</th>
-                                    <th style="min-width:125px;">End</th>
-                                    <th style="min-width:140px;">Scheduled (hrs)</th>
-                                    <th style="min-width:130px;">Break (hrs)</th>
-                                    <th style="min-width:130px;">Location</th>
+                                    <th style="min-width:150px;">Category</th>
+                                    <th style="min-width:200px;">Title</th>
+                                    <th style="min-width:150px;">Target</th>
+                                    <th style="min-width:130px;">Priority</th>
+                                    <th style="min-width:130px;">Status</th>
+                                    <th style="min-width:130px;">Completion</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
                                 <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -101,10 +102,11 @@ $this->extend($layout);
                     data: function (d) {
                         d.start_date = $('#start_date').val();
                         d.end_date = $('#end_date').val();
-                        d.period_id = $('#period_id').val();
+                        d.anticipation_category = $('#anticipation_category').val();
+                        d.item_status = $('#item_status').val();
                     }
                 },
-                order: [[2, 'desc']]
+                order: [[2, 'asc']]
             });
             $('#btn-filter').on('click', function () {
                 table.ajax.reload();
@@ -112,7 +114,8 @@ $this->extend($layout);
             $('#btn-reset').on('click', function () {
                 $('#start_date').val('');
                 $('#end_date').val('');
-                $('#period_id').val('');
+                $('#anticipation_category').val('');
+                $('#item_status').val('');
                 table.ajax.reload();
             });
         });

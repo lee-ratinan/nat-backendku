@@ -166,15 +166,10 @@ class AnticipationModel extends Model
                 '<a class="btn btn-sm btn-primary" href="' . $row['id'] . '"><i class="fa-solid fa-edit"> Edit</button>',
                 $categories[$row['anticipation_category']],
                 $row['anticipation_title'],
-                $row['why_it_matters'],
-                $row['external_url'],
-                $row['image_url'],
-                $row['target_date'],
-                $date_precision[$row['date_precision']],
+                $row['target_date'] . ' (' . $date_precision[$row['date_precision']] . ')',
                 $favorites[$row['is_favorite']],
                 $statuses[$row['item_status']],
-                $row['completed_at'],
-                $row['completion_note'],
+                $row['completed_at']
             ];
         }
         return [

@@ -25,7 +25,34 @@ class Anticipation extends BaseController
 
     public function list(): ResponseInterface
     {
-        return $this->response->setJSON([]);
+        $model              = new AnticipationModel();
+        $columns            = [
+            '',
+            'anticipation_category',
+            'anticipation_title',
+            'target_date',
+            'is_favorite',
+            'item_status',
+            'completed_at'
+        ];
+        $order              = $this->request->getPost('order');
+        $start              = $this->request->getPost('start');
+        $length             = $this->request->getPost('length');
+        $order_column_index = $order[0]['column'] ?? 0;
+        $order_column       = $columns[$order_column_index];
+        $order_direction    = $order[0]['dir'] ?? 'desc';
+        $search_value       = $this->request->getPost('search')['value'] ?? '';
+        $start_date         = $this->request->getPost('start_date');
+        $end_date           = $this->request->getPost('end_date');
+        $category           = $this->request->getPost('anticipation_category');
+        $status             = $this->request->getPost('item_status');
+        $result             = $model->getDataTables($start, $length, $order_column, $order_direction, $category, $status, $start_date, $end_date, $search_value);
+        return $this->response->setJSON([
+            'draw'            => $this->request->getPost('draw'),
+            'recordsTotal'    => $result['recordsTotal'],
+            'recordsFiltered' => $result['recordsFiltered'],
+            'data'            => $result['data']
+        ]);
     }
 
     public function edit(int $anticipation_id): string
