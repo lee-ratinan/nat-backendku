@@ -144,8 +144,20 @@ class AnticipationModel extends Model
 
     private function applyFilter(string $category, string $status, string $date_from, string $date_to, string $search_value): void
     {
-        //
+        if (!empty($category)) {
+            $this->where('anticipation_category', $category);
+        }
+        if (!empty($status)) {
+            $this->where('item_status', $status);
+        }
+        if (!empty($date_from)) {
+            $this->where('target_date >=', $date_from);
+        }
+        if (!empty($date_to)) {
+            $this->where('target_date <=', $date_to);
+        }
     }
+
     public function getDataTables(int $start, int $length, string $order_column, string $order_direction, string $category, string $status, string $date_from, string $date_to, string $search_value): array
     {
         $record_total    = $this->countAllResults();
@@ -158,18 +170,19 @@ class AnticipationModel extends Model
         $raw_result     = $this->orderBy($order_column, $order_direction)->limit($length, $start)->findAll();
         $result         = [];
         $categories     = $this->getAnticipationCategoryOptions();
-        $date_precision = $this->getDatePrecisionOptions();
         $favorites      = $this->getIsFavoriteOptions();
         $statuses       = $this->getItemStatusOptions();
+        $session        = session();
+        $locale         = $session->locale;
         foreach ($raw_result as $row) {
             $result[]     = [
-                '<a class="btn btn-sm btn-primary" href="' . $row['id'] . '"><i class="fa-solid fa-edit"> Edit</button>',
+                '<a class="btn btn-sm btn-outline-primary" href="' . base_url($locale . '/office/anticipation/edit/' . $row['id']) . '"><i class="fa-solid fa-edit"></button>',
                 $categories[$row['anticipation_category']],
                 $row['anticipation_title'],
-                $row['target_date'] . ' (' . $date_precision[$row['date_precision']] . ')',
+                (empty($row['target_date']) ? '' : $this->printDateByPrecision($row['target_date'], $row['date_precision'])),
                 $favorites[$row['is_favorite']],
                 $statuses[$row['item_status']],
-                $row['completed_at']
+                (empty($row['completed_at']) ? '' : date(DATE_FORMAT_UI, strtotime($row['completed_at'])))
             ];
         }
         return [
@@ -179,4 +192,14 @@ class AnticipationModel extends Model
         ];
     }
 
+    public function printDateByPrecision(string $date, string $precision): string
+    {
+        $date = strtotime($date);
+        if ('year' == $precision) {
+            return 'by ' . date('Y', $date);
+        } else if ('month' == $precision) {
+            return '~ ' . date('M Y', $date);
+        }
+        return date(DATE_FORMAT_UI, $date);
+    }
 }
