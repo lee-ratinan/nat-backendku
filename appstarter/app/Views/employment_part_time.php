@@ -71,6 +71,7 @@ $this->extend($layout);
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                                 </tfoot>
                             </table>

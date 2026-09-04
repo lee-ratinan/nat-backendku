@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\AnticipationModel;
+use App\Models\LogActivityModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class Anticipation extends BaseController
@@ -67,6 +69,9 @@ class Anticipation extends BaseController
             $page_title      = 'Edit Anticipation';
             $anticipation_id = $anticipation_id/$model::ID_NONCE;
             $anticipation    = $model->find($anticipation_id);
+            if (empty($anticipation)) {
+                throw new PageNotFoundException();
+            }
         }
         $data       = [
             'lang'            => $lang,
@@ -76,13 +81,67 @@ class Anticipation extends BaseController
             'mode'            => $mode,
             'anticipation'    => $anticipation,
             'anticipation_id' => $anticipation_id,
+            'config'          => $model->getConfiguration()
         ];
         return view('anticipation_edit', $data);
     }
 
     public function save(): ResponseInterface
     {
-        return $this->response->setJSON([]);
+        $ant_model = new AnticipationModel();
+        $log_model = new LogActivityModel();
+        $session   = session();
+        $id        = $this->request->getPost('id');
+        $data      = [];
+        $fields    = [
+            'anticipation_category',
+            'anticipation_title',
+            'why_it_matters',
+            'external_url',
+            'image_url',
+            'target_date',
+            'date_precision',
+            'is_favorite',
+            'item_status',
+            'completed_at',
+            'completion_note',
+        ];
+        foreach ($fields as $field) {
+            $value        = $this->request->getPost($field);
+            $data[$field] = (!empty($value)) ? $value : null;
+        }
+        try {
+            if (0 < $id) {
+                if ($ant_model->update($id, $data)) {
+                    $log_model->insertTableUpdate('anticipation_master', $id, $data, $session->user_id);
+                    return $this->response->setJSON([
+                        'status'   => 'success',
+                        'toast'    => 'Successfully updated the anticipation.',
+                        'redirect' => base_url($session->locale . '/office/anticipation')
+                    ]);
+                }
+            } else {
+                $data['created_by'] = $session->user_id;
+                // INSERT
+                if ($id = $ant_model->insert($data)) {
+                    $log_model->insertTableUpdate('anticipation_master', $id, $data, $session->user_id);
+                    return $this->response->setJSON([
+                        'status'   => 'success',
+                        'toast'    => 'Successfully created new anticipation.',
+                        'redirect' => base_url($session->locale . '/office/anticipation')
+                    ]);
+                }
+            }
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'toast'   => lang('System.status_message.generic_error')
+            ])->setStatusCode(HTTP_STATUS_SOMETHING_WRONG);
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'toast'   => $e->getMessage()
+            ])->setStatusCode(HTTP_STATUS_SOMETHING_WRONG);
+        }
     }
 
     public function toDos(): string

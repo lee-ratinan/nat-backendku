@@ -30,8 +30,12 @@ class AnticipationModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
-    const ID_NONCE = 701;
+    const int ID_NONCE = 701;
     private array $configurations = [
+        'id'                    => [
+            'type'  => 'hidden',
+            'label' => 'ID'
+        ],
         'anticipation_category' => [
             'type'     => 'select',
             'label'    => 'Category',
@@ -161,23 +165,24 @@ class AnticipationModel extends Model
 
     public function getDataTables(int $start, int $length, string $order_column, string $order_direction, string $category, string $status, string $date_from, string $date_to, string $search_value): array
     {
-        $record_total    = $this->countAllResults();
+        $record_total = $this->countAllResults();
         $record_filtered = $record_total;
         if (!empty($category) || !empty($status) || !empty($date_from) || !empty($date_to) || !empty($search_value)) {
             $this->applyFilter($category, $status, $date_from, $date_to, $search_value);
             $record_filtered = $this->countAllResults();
             $this->applyFilter($category, $status, $date_from, $date_to, $search_value);
         }
-        $raw_result     = $this->orderBy($order_column, $order_direction)->limit($length, $start)->findAll();
-        $result         = [];
-        $categories     = $this->getAnticipationCategoryOptions();
-        $favorites      = $this->getIsFavoriteOptions();
-        $statuses       = $this->getItemStatusOptions();
-        $session        = session();
-        $locale         = $session->locale;
+        $raw_result = $this->orderBy($order_column, $order_direction)->limit($length, $start)->findAll();
+        $result = [];
+        $categories = $this->getAnticipationCategoryOptions();
+        $favorites = $this->getIsFavoriteOptions();
+        $statuses = $this->getItemStatusOptions();
+        $session = session();
+        $locale = $session->locale;
         foreach ($raw_result as $row) {
-            $result[]     = [
-                '<a class="btn btn-sm btn-outline-primary" href="' . base_url($locale . '/office/anticipation/edit/' . $row['id']) . '"><i class="fa-solid fa-edit"></button>',
+            $id = $row['id'] * self::ID_NONCE;
+            $result[] = [
+                '<a class="btn btn-sm btn-outline-primary" href="' . base_url($locale . '/office/anticipation/edit/' . $id) . '"><i class="fa-solid fa-edit"></button>',
                 $categories[$row['anticipation_category']],
                 $row['anticipation_title'],
                 (empty($row['target_date']) ? '' : $this->printDateByPrecision($row['target_date'], $row['date_precision'])),
