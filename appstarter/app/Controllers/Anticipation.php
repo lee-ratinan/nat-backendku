@@ -10,9 +10,9 @@ class Anticipation extends BaseController
 
     public function index(): string
     {
-        $lang       = $this->request->getLocale();
-        $model      = new AnticipationModel();
-        $data = [
+        $lang  = $this->request->getLocale();
+        $model = new AnticipationModel();
+        $data  = [
             'lang'       => $lang,
             'page_title' => 'Anticipation',
             'slug_group' => 'anticipation',
@@ -55,9 +55,28 @@ class Anticipation extends BaseController
         ]);
     }
 
-    public function edit(int $anticipation_id): string
+    public function edit(int $anticipation_id = 0): string
     {
-        $data = [];
+        $lang         = $this->request->getLocale();
+        $model        = new AnticipationModel();
+        $mode         = 'new';
+        $anticipation = [];
+        $page_title   = 'New Anticipation';
+        if (0 < $anticipation_id) {
+            $mode            = 'edit';
+            $page_title      = 'Edit Anticipation';
+            $anticipation_id = $anticipation_id/$model::ID_NONCE;
+            $anticipation    = $model->find($anticipation_id);
+        }
+        $data       = [
+            'lang'            => $lang,
+            'page_title'      => $page_title,
+            'slug_group'      => 'anticipation',
+            'slug'            => '/office/anticipation/edit',
+            'mode'            => $mode,
+            'anticipation'    => $anticipation,
+            'anticipation_id' => $anticipation_id,
+        ];
         return view('anticipation_edit', $data);
     }
 

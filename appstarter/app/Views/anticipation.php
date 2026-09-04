@@ -106,7 +106,7 @@ $this->extend($layout);
                         d.item_status = $('#item_status').val();
                     }
                 },
-                order: [[2, 'asc']]
+                order: [[3, 'asc']]
             });
             $('#btn-filter').on('click', function () {
                 table.ajax.reload();

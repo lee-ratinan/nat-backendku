@@ -30,6 +30,7 @@ class AnticipationModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
+    const ID_NONCE = 701;
     private array $configurations = [
         'anticipation_category' => [
             'type'     => 'select',
