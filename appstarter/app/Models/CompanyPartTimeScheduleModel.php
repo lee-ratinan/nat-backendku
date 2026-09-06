@@ -76,9 +76,9 @@ class CompanyPartTimeScheduleModel extends Model
         $configurations  = $this->configurations;
         // period_id
         $period_model    = new CompanyPartTimePeriodModel();
-        $period_options  = $period_model->select('id, period_start, period_end')->findAll();
+        $period_options  = $period_model->select('id, period_start, period_end')->orderBy('period_end', 'desc')->limit(5)->findAll();
         foreach ($period_options as $period) {
-            $configurations['period_id']['options'][$period['id']] = date(DATE_FORMAT_UI, strtotime($period['period_start'])) . ' - ' . date(DATE_FORMAT_UI, strtotime($period['period_end']));
+            $configurations['period_id']['options'][$period['id']] = format_date_range($period['period_start'], $period['period_end']);
         }
         return $configurations;
     }
@@ -124,7 +124,7 @@ class CompanyPartTimeScheduleModel extends Model
             $id       = $row['id'] * self::ID_NONCE;
             $result[] = [
                 '<a class="btn btn-outline-primary" href="' . base_url($locale . '/office/employment/part-time/edit/' . $id) . '"><i class="fa-solid fa-edit"></i></a>',
-                date(DATE_FORMAT_UI, strtotime($row['period_start'])) . ' - ' . date(DATE_FORMAT_UI, strtotime($row['period_end'])),
+                format_date_range($row['period_start'], $row['period_end']),
                 date(DATE_FORMAT_UI . ' (D)', strtotime($row['scheduled_start'])) . ': ' . date(TIME_FORMAT_UI, strtotime($row['scheduled_start'])),
                 'to ' . date(TIME_FORMAT_UI, strtotime($row['scheduled_end'])),
                 number_format($row['scheduled_hours'] ?? 0, 2),

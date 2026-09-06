@@ -46,7 +46,7 @@ $this->extend($layout);
     <input type="hidden" id="total_hours" />
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            $('#scheduled_start, #scheduled_end').change(function () {
+            let calculate_hours = function () {
                 let start_ts = $('#scheduled_start').val(),
                     end_ts = $('#scheduled_end').val();
                 if (start_ts && end_ts) {
@@ -64,7 +64,27 @@ $this->extend($layout);
                     $('#scheduled_hours').val('');
                     $('#scheduled_break').val('');
                 }
+            };
+            $('#scheduled_start').change(function () {
+                let start_ts = $('#scheduled_start').val(),
+                    end_ts = $('#scheduled_end').val();
+                if ('' === end_ts) {
+                    $('#scheduled_end')
+                        .attr('min', start_ts)
+                        .val(start_ts);
+                }
+                calculate_hours();
             });
+            $('#scheduled_end').change(function () {
+                let start_ts = $('#scheduled_start').val(),
+                    end_ts = $('#scheduled_end').val();
+                if ('' === start_ts) {
+                    $('#scheduled_start')
+                        .attr('max', end_ts)
+                        .val(end_ts);
+                }
+                calculate_hours();
+            })
             $('#scheduled_hours').change(function () {
                 let work = $('#scheduled_hours').val(),
                     total = $('#total_hours').val(),

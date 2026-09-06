@@ -10,7 +10,7 @@
 use App\Models\HealthAffirmationModel;
 
 /**
- * Generate any form field with floating label
+ * Generate any form field with a floating label
  * @param string $id
  * @param array $configuration
  * @param int|string|array|null $current_value (optional)
@@ -216,6 +216,34 @@ function format_phone_number(string $country_code, string $phone_number): string
         return '+65 ' . substr($phone_number, 0, 4) . ' ' . substr($phone_number, 4);
     }
     return $country_code . $phone_number;
+}
+
+/**
+ * @param string $start_date
+ * @param string $end_date
+ * @return string
+ */
+function format_date_range(string $start_date, string $end_date): string
+{
+    $int_start = strtotime($start_date);
+    $int_end   = strtotime($end_date);
+    // Check year
+    if (date('Y', $int_start) != date('Y', $int_end)) {
+        // Different years, no point, need to return the full dates for both
+        return date(DATE_FORMAT_UI, $int_start) . ' - ' . date(DATE_FORMAT_UI, $int_end);
+    }
+    // Same year, check month
+    if (date('m', $int_start) != date('m', $int_end)) {
+        // Different months, merge year only
+        return date('j M', $int_start) . ' - ' . date(DATE_FORMAT_UI, $int_end);
+    }
+    // Same year, same month, check date
+    if (date('d', $int_start) != date('d', $int_end)) {
+        // Different days, merge year and month
+        return date('j', $int_start) . ' - ' . date('j M Y', $int_end);
+    }
+    // both are the same
+    return date(DATE_FORMAT_UI, $int_start);
 }
 
 /**

@@ -54,7 +54,7 @@ $this->extend($layout);
                                 <thead>
                                 <tr>
                                     <th style="width:50px;"></th>
-                                    <th style="min-width:200px;">Period</th>
+                                    <th style="min-width:180px;">Period</th>
                                     <th style="min-width:200px;">Start</th>
                                     <th style="min-width:125px;">End</th>
                                     <th style="min-width:140px;">Scheduled (hrs)</th>
