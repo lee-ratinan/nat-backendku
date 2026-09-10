@@ -47,7 +47,7 @@ function calculateHaul(float|int $distance): string
 }
 
 /**
- * Generate 6-digit unique identifier using Crockford’s Alphabet
+ * Generate a 6-digit unique identifier using Crockford’s Alphabet
  * @return string
  */
 function uniqueIdentifier(): string
@@ -69,6 +69,17 @@ function uniqueIdentifier(): string
 function kmToMiles(float $km): float
 {
     return $km / 1.609344;
+}
+
+function convertTimeToFloat(string $time): float
+{
+    if (empty($time)) {
+        return 0;
+    }
+    log_message('debug', 'Time: ' . $time);
+    $time_parts = explode(':', $time);
+    log_message('debug', 'Time parts: ' . print_r($time_parts, true));
+    return intval($time_parts[0]) + intval($time_parts[1]) / 60;
 }
 
 /**

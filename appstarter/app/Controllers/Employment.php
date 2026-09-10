@@ -2282,6 +2282,7 @@ class Employment extends BaseController
 
     public function partTimeCalendar(string $month = ''): string
     {
+        helper('math');
         $lang      = $this->request->getLocale();
         if (empty($month)) {
             $month = date('Y-m');
@@ -2299,7 +2300,9 @@ class Employment extends BaseController
             $date            = date('j', strtotime($day['scheduled_start']));
             $calendar[$date] = [
                 'start'    => date(TIME_FORMAT_UI, strtotime($day['scheduled_start'])),
+                'start_pct'=> number_format(convertTimeToFloat(substr($day['scheduled_start'], 11))/24*100, 2),
                 'end'      => date(TIME_FORMAT_UI, strtotime($day['scheduled_end'])),
+                'end_pct'  => number_format(convertTimeToFloat(substr($day['scheduled_end'], 11))/24*100, 2),
                 'hours'    => $day['scheduled_hours'],
                 'break'    => $day['scheduled_break'],
                 'location' => $day['work_location'],

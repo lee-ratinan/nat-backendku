@@ -7,6 +7,20 @@ $this->extend($layout);
 <?php $session = session(); ?>
     <style>
         th {min-width:185px;text-align:center;width:14.28%;}
+        td.working-day {
+            /* Change your test colors here */
+            --bg-color: transparent;     /* Base cell color */
+            --event-color: #525c6c;  /* Stripe color #323c4c */
+            /* Test positions (e.g., 9:00 to 15:00 -> 37.5% to 62.5%) */
+            --start-pct: 37.5%;
+            --end-pct: 62.5%;
+            background: linear-gradient(
+                to bottom,
+                var(--bg-color) 0% var(--start-pct),
+                var(--event-color) var(--start-pct) var(--end-pct),
+                var(--bg-color) var(--end-pct) 100%
+            );
+        }
     </style>
     <div class="pagetitle">
         <h1><?= $page_title ?></h1>
@@ -59,7 +73,7 @@ $this->extend($layout);
                                     }
                                     for ($j = 1; $j <= $day_count; $j++) {
                                         if (isset($calendar[$j])) {
-                                            echo '<td>';
+                                            echo '<td class="working-day" style="--start-pct: ' . $calendar[$j]['start_pct'] . '%; --end-pct: ' . $calendar[$j]['end_pct'] . '%;" data-chk="'.substr($calendar[$j]['start'], 11).'">';
                                             echo '<h4 class="float-end">' . $j . '</h4>';
                                             echo '<i class="fa-solid fa-clock fa-fw"></i> ' . $calendar[$j]['start'] . '<br/><i class="fa-solid fa-chevron-right fa-fw"></i> ' . $calendar[$j]['end'] . '<br/>';
                                             echo '<i class="fa-solid fa-minus fa-fw"></i> ' . number_format($calendar[$j]['hours'], 2) . 'h';
