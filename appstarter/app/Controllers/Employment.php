@@ -2297,9 +2297,11 @@ class Employment extends BaseController
             ->findAll();
         $calendar  = [];
         foreach ($schedules as $day) {
-            $date            = date('j', strtotime($day['scheduled_start']));
+            $dt_object       = strtotime($day['scheduled_start']);
+            $date            = date('j', $dt_object);
             $calendar[$date] = [
-                'start'    => date(TIME_FORMAT_UI, strtotime($day['scheduled_start'])),
+                'date'     => date(DATE_FORMAT_DB, $dt_object),
+                'start'    => date(TIME_FORMAT_UI, $dt_object),
                 'start_pct'=> number_format(convertTimeToFloat(substr($day['scheduled_start'], 11))/24*100, 2),
                 'end'      => date(TIME_FORMAT_UI, strtotime($day['scheduled_end'])),
                 'end_pct'  => number_format(convertTimeToFloat(substr($day['scheduled_end'], 11))/24*100, 2),

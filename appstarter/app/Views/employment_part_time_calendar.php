@@ -21,6 +21,18 @@ $this->extend($layout);
                 var(--bg-color) var(--end-pct) 100%
             );
         }
+        td.today h4 {
+            background-color: #f00;
+            color: #fff;
+            border-radius: 50%;
+        }
+        h4 {
+            height: 1.5rem;
+            line-height: 1.5rem;
+            width: 2rem;
+            text-align: center;
+            margin-bottom: 0;
+        }
     </style>
     <div class="pagetitle">
         <h1><?= $page_title ?></h1>
@@ -73,7 +85,7 @@ $this->extend($layout);
                                     }
                                     for ($j = 1; $j <= $day_count; $j++) {
                                         if (isset($calendar[$j])) {
-                                            echo '<td class="working-day" style="--start-pct: ' . $calendar[$j]['start_pct'] . '%; --end-pct: ' . $calendar[$j]['end_pct'] . '%;" data-chk="'.substr($calendar[$j]['start'], 11).'">';
+                                            echo '<td class="working-day" data-date="' . $calendar[$j]['date'] . '" style="--start-pct: ' . $calendar[$j]['start_pct'] . '%; --end-pct: ' . $calendar[$j]['end_pct'] . '%;" data-chk="'.substr($calendar[$j]['start'], 11).'">';
                                             echo '<h4 class="float-end">' . $j . '</h4>';
                                             echo '<i class="fa-solid fa-clock fa-fw"></i> ' . $calendar[$j]['start'] . '<br/><i class="fa-solid fa-chevron-right fa-fw"></i> ' . $calendar[$j]['end'] . '<br/>';
                                             echo '<i class="fa-solid fa-minus fa-fw"></i> ' . number_format($calendar[$j]['hours'], 2) . 'h';
@@ -83,7 +95,7 @@ $this->extend($layout);
                                             echo '<br/><i class="fa-solid fa-location fa-fw"></i> ' . $calendar[$j]['location'];
                                             echo '</td>';
                                         } else {
-                                            echo '<td class="bg-secondary text-black"><h4 class="text-end">' . $j . '</h4><br/><br/><br/></td>';
+                                            echo '<td class="bg-secondary text-black" data-date="' . $yyyymm . '-' . str_pad($j, 2, '0', STR_PAD_LEFT) . '"><h4 class="float-end">' . $j . '</h4><br/><br/><br/></td>';
                                         }
                                         if ($i == 7) {
                                             echo '</tr><tr>';
@@ -108,6 +120,9 @@ $this->extend($layout);
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const today = new Intl.DateTimeFormat('en-CA').format(new Date());
+            console.log(today);
+            $(`[data-date="${today}"]`).addClass('today');
             $('#btn-change').click(function () {
                 let month = $('#month').val();
                 document.location.href = '<?= base_url($session->locale . '/office/employment/part-time/calendar') ?>/' + month;
