@@ -13,10 +13,10 @@ use App\Models\HealthAffirmationModel;
  * Generate any form field with a floating label
  * @param string $id
  * @param array $configuration
- * @param int|string|array|null $current_value (optional)
+ * @param int|string|array $current_value (optional)
  * @return void
  */
-function generate_form_field(string $id, array $configuration, int|string|array $current_value = null): void
+function generate_form_field(string $id, array $configuration, int|string|array $current_value = ''): void
 {
     $input_type = $configuration['type'];
     $required   = (@$configuration['required'] ? 'required' : '');
@@ -29,7 +29,7 @@ function generate_form_field(string $id, array $configuration, int|string|array 
     $label      = (isset($configuration['label_key']) ? lang($configuration['label_key']) : @$configuration['label']);
     if (in_array($input_type, ['text', 'email', 'password', 'number', 'date', 'time', 'datetime-local', 'month', 'week', 'url', 'search', 'color'])) {
         $placeholder = @$configuration['placeholder'] ?? '';
-        $value = (!is_null($current_value) && '0000-00-00' != $current_value ? "value='{$current_value}'" : (!empty($configuration['default']) ? "value='{$configuration['default']}'" : ''));
+        $value = (!empty($current_value) && '0000-00-00' != $current_value ? "value='{$current_value}'" : (!empty($configuration['default']) ? "value='{$configuration['default']}'" : ''));
         echo "<div class='form-floating mb-3' id='{$id}-block'><input type='{$input_type}' class='form-control' id='{$id}' name='{$id}' placeholder='{$placeholder}' $value $required $readonly $disabled $min $minlength $max $maxlength><label for='{$id}'>" . $label . "</label>";
         if (!empty($configuration['details'])) {
             echo "<small class='form-text text-muted small'>" . lang($configuration['details']) . "</small>";
@@ -430,6 +430,20 @@ function minute_format(int $minutes): string
     $h = floor(($minutes - $d * 1440) / 60);
     $m = $minutes % 60;
     return ($d > 0 ? $d . 'd ' : '') . ($h > 0 ? $h . 'h ' : '') . ($m > 0 ? $m . 'm' : '');
+}
+
+function hour_format(float $hours): string
+{
+    $minutes = $hours * 100 % 100;
+    $hours   = floor($hours) . 'h';
+    if ('0h' == $hours) {
+        $hours = '';
+    }
+    if (0 == $minutes) {
+        return $hours;
+    }
+    $minutes = $minutes / 100 * 60;
+    return $hours . number_format($minutes) . 'm';
 }
 
 /**

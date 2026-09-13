@@ -6,7 +6,7 @@ $this->extend($layout);
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
     <style>
-        th {min-width:185px;text-align:center;width:14.28%;}
+        th {min-width:150px;text-align:center;width:14.28%;}
         td.working-day {
             /* Change your test colors here */
             --bg-color: transparent;     /* Base cell color */
@@ -88,9 +88,9 @@ $this->extend($layout);
                                             echo '<td class="working-day" data-date="' . $calendar[$j]['date'] . '" style="--start-pct: ' . $calendar[$j]['start_pct'] . '%; --end-pct: ' . $calendar[$j]['end_pct'] . '%;" data-chk="'.substr($calendar[$j]['start'], 11).'">';
                                             echo '<h4 class="float-end">' . $j . '</h4>';
                                             echo '<i class="fa-solid fa-clock fa-fw"></i> ' . $calendar[$j]['start'] . '<br/><i class="fa-solid fa-chevron-right fa-fw"></i> ' . $calendar[$j]['end'] . '<br/>';
-                                            echo '<i class="fa-solid fa-minus fa-fw"></i> ' . number_format($calendar[$j]['hours'], 2) . 'h';
+                                            echo '<i class="fa-solid fa-minus fa-fw"></i> ' . hour_format($calendar[$j]['hours']);
                                             if (0 < $calendar[$j]['break']) {
-                                                echo ' + ' . number_format($calendar[$j]['break'], 2) . 'h br';
+                                                echo ' + ' . hour_format($calendar[$j]['break']);
                                             }
                                             echo '<br/><i class="fa-solid fa-location fa-fw"></i> ' . $calendar[$j]['location'];
                                             echo '</td>';
