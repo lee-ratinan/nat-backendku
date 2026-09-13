@@ -2236,11 +2236,21 @@ class Employment extends BaseController
         }
     }
 
-    public function partTimeStatistics(): string
+    /**
+     * @param int $year
+     * @return string
+     */
+    public function partTimeStatistics(int $year = 0): string
     {
         $lang       = $this->request->getLocale();
+        if (2026 > $year) {
+            $year = date('Y');
+        }
         $ptp_model  = new CompanyPartTimePeriodModel();
-        $periods    = $ptp_model->findAll();
+        $periods    = $ptp_model
+            ->where('period_end >=', $year . '-01-01')
+            ->where('period_start <=', $year . '-12-31')
+            ->findAll();
         $results    = [];
         $table      = [];
         $totals     = [];
@@ -2271,6 +2281,7 @@ class Employment extends BaseController
             'slug_group'     => 'employment',
             'slug'           => '/office/employment/part-time/stats',
             'chart_data'     => $results,
+            'year'           => $year,
             'height'         => count($results) * 40 . 'px',
             'table'          => $table,
             'totals'         => $totals,

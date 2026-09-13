@@ -134,6 +134,7 @@ $routes->group('{locale}/office', ['filter' => 'auth'], static function ($routes
     $routes->get('employment/part-time/pay-period/edit/(:any)', 'Employment::partTimePayPeriodEdit/$1'); // edit pay period
     $routes->post('employment/part-time/pay-period/edit', 'Employment::partTimePayPeriodSave'); // save pay period
     $routes->get('employment/part-time/stats', 'Employment::partTimeStatistics');
+    $routes->get('employment/part-time/stats/(:num)', 'Employment::partTimeStatistics/$1');
     $routes->get('employment/part-time/calendar', 'Employment::partTimeCalendar');
     $routes->get('employment/part-time/calendar/(:any)', 'Employment::partTimeCalendar/$1');
     // Total income

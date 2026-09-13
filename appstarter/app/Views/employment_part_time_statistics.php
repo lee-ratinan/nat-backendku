@@ -28,7 +28,10 @@ $this->extend($layout);
             <div class="col">
                 <div class="card">
                     <div class="card-body pt-3">
-                        <h5 class="card-title">Part-Time Statistics (before CPF)</h5>
+                        <h5 class="card-title">Part-Time Statistics (before CPF) - <?= $year ?></h5>
+                        <?php for ($y = 2026; $y <= date('Y'); $y++) : ?>
+                            <a class="btn btn-outline-primary btn-sm" href="<?= base_url($session->locale . '/office/employment/part-time/stats/' . $y) ?>"><?= $y ?></a>
+                        <?php endfor; ?>
                         <div class="row">
                             <div class="col">
                                 <script><?= generate_bar_chart_script($chart_data, 'main-chart', 'date', ['subtotal' => 'Subtotal ($)'], $height) ?></script>
