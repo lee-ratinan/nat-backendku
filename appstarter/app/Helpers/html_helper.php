@@ -13,10 +13,10 @@ use App\Models\HealthAffirmationModel;
  * Generate any form field with a floating label
  * @param string $id
  * @param array $configuration
- * @param int|string|array $current_value (optional)
+ * @param int|string|array|null $current_value (optional)
  * @return void
  */
-function generate_form_field(string $id, array $configuration, int|string|array $current_value = ''): void
+function generate_form_field(string $id, array $configuration, int|string|array|null $current_value = ''): void
 {
     $input_type = $configuration['type'];
     $required   = (@$configuration['required'] ? 'required' : '');
