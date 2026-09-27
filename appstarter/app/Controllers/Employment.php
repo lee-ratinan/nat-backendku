@@ -22,7 +22,6 @@ use ReflectionException;
 class Employment extends BaseController
 {
 
-    const PERMISSION_REQUIRED = 'finance';
     private array $currencies = [
         'AUD',
         'SGD',
@@ -654,7 +653,7 @@ class Employment extends BaseController
         $model   = new CompanyMasterModel();
         $data    = [
             'page_title'   => 'CPF',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'cpf',
             'slug'         => '/office/employment/cpf',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -738,7 +737,7 @@ class Employment extends BaseController
         }
         $data = [
             'page_title'   => $page_title,
-            'slug_group'   => 'employment',
+            'slug_group'   => 'cpf',
             'slug'         => '/office/employment/cpf',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -814,7 +813,7 @@ class Employment extends BaseController
         $model   = new CompanyCPFStatementModel();
         $data    = [
             'page_title'   => 'CPF Statement',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'cpf',
             'slug'         => '/office/employment/cpf',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -844,7 +843,7 @@ class Employment extends BaseController
         }
         $data    = [
             'page_title'   => $page_title,
-            'slug_group'   => 'employment',
+            'slug_group'   => 'cpf',
             'slug'         => '/office/employment/cpf',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -913,7 +912,7 @@ class Employment extends BaseController
         }
         $data      = [
             'page_title'   => 'CPF Current Balance',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'cpf',
             'slug'         => '/office/employment/cpf/now',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1012,7 +1011,7 @@ class Employment extends BaseController
         $tc_list    = array_column($tc_list, 'transaction_code');
         $data       = [
             'page_title'     => 'CPF Current Balance',
-            'slug_group'     => 'employment',
+            'slug_group'     => 'cpf',
             'slug'           => '/office/employment/cpf/growth',
             'user_session'   => $session->user,
             'roles'          => $session->roles,
@@ -1091,7 +1090,7 @@ class Employment extends BaseController
         }
         $data            = [
             'page_title'   => 'CPF Statistics of ' . $year,
-            'slug_group'   => 'employment',
+            'slug_group'   => 'cpf',
             'slug'         => '/office/employment/cpf/stats',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1220,7 +1219,7 @@ class Employment extends BaseController
         // DATA
         $data = [
             'page_title'                        => 'CPF Contribution',
-            'slug_group'                        => 'employment',
+            'slug_group'                        => 'cpf',
             'slug'                              => '/office/employment/cpf/contribution',
             'user_session'                      => $session->user,
             'roles'                             => $session->roles,
@@ -1278,7 +1277,7 @@ class Employment extends BaseController
         ksort($graph);
         $data  = [
             'page_title'                => 'CPF Investment',
-            'slug_group'                => 'employment',
+            'slug_group'                => 'cpf',
             'slug'                      => '/office/employment/cpf/investment',
             'user_session'              => $session->user,
             'roles'                     => $session->roles,
@@ -1347,7 +1346,7 @@ class Employment extends BaseController
         }
         $data          = [
             'page_title'   => 'Freelance',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1410,7 +1409,7 @@ class Employment extends BaseController
         }
         $data          = [
             'page_title'   => $page_title,
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1510,7 +1509,7 @@ class Employment extends BaseController
         $data    = [
             'lang'         => $lang,
             'page_title'   => 'Freelance Statistics',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance/stats',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1530,7 +1529,7 @@ class Employment extends BaseController
         $model         = new CompanyFreelanceClientModel();
         $data          = [
             'page_title'   => 'Freelance Clients',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance-client',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1592,7 +1591,7 @@ class Employment extends BaseController
         }
         $data          = [
             'page_title'   => $page_title,
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance-client',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1607,7 +1606,7 @@ class Employment extends BaseController
     /**
      * @throws ReflectionException
      */
-    public function freelanceClientSave()
+    public function freelanceClientSave(): ResponseInterface
     {
         $mode          = $this->request->getPost('mode');
         $client_model  = new CompanyFreelanceClientModel();
@@ -1669,7 +1668,7 @@ class Employment extends BaseController
         }
         $data          = [
             'page_title'   => 'Freelance Income',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance-income',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1741,7 +1740,7 @@ class Employment extends BaseController
         }
         $data          = [
             'page_title'   => $page_title,
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance-income',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1856,7 +1855,7 @@ class Employment extends BaseController
         $data          = [
             'lang' => $lang,
             'page_title'   => 'Freelance Income Statistics',
-            'slug_group'   => 'employment',
+            'slug_group'   => 'freelance',
             'slug'         => '/office/employment/freelance-income/stats',
             'user_session' => $session->user,
             'roles'        => $session->roles,
@@ -1990,7 +1989,7 @@ class Employment extends BaseController
         $data = [
             'lang'       => $lang,
             'page_title' => 'Part Time Schedule',
-            'slug_group' => 'employment',
+            'slug_group' => 'parttime',
             'slug'       => '/office/employment/part-time',
             'periods'    => $results,
         ];
@@ -2009,8 +2008,8 @@ class Employment extends BaseController
             'work_location'
         ];
         $order              = $this->request->getPost('order');
-        $start              = $this->request->getPost('start');
-        $length             = $this->request->getPost('length');
+        $start              = 0;
+        $length             = 31;
         $order_column_index = $order[0]['column'] ?? 0;
         $order_column       = $columns[$order_column_index];
         $order_direction    = $order[0]['dir'] ?? 'desc';
@@ -2046,7 +2045,7 @@ class Employment extends BaseController
         $data = [
             'lang'       => $lang,
             'page_title' => $page,
-            'slug_group' => 'employment',
+            'slug_group' => 'parttime',
             'slug'       => '/office/employment/part-time/edit',
             'config'     => $model->getConfigurations(),
             'mode'       => $mode,
@@ -2127,7 +2126,7 @@ class Employment extends BaseController
         $data                  = [
             'lang'              => $lang,
             'page_title'        => 'Part Time Pay Period',
-            'slug_group'        => 'employment',
+            'slug_group'        => 'parttime',
             'slug'              => '/office/employment/part-time/pay-period',
         ];
         return view('employment_part_time_period', $data);
@@ -2170,7 +2169,7 @@ class Employment extends BaseController
         $data = [
             'lang'       => $lang,
             'page_title' => $page,
-            'slug_group' => 'employment',
+            'slug_group' => 'parttime',
             'slug'       => '/office/employment/part-time/period/edit',
             'config'     => $model->getConfigurations(),
             'mode'       => $mode,
@@ -2278,7 +2277,7 @@ class Employment extends BaseController
         $data = [
             'lang'           => $lang,
             'page_title'     => 'Part Time Statistics',
-            'slug_group'     => 'employment',
+            'slug_group'     => 'parttime',
             'slug'           => '/office/employment/part-time/stats',
             'chart_data'     => $results,
             'year'           => $year,
@@ -2324,7 +2323,7 @@ class Employment extends BaseController
         $data      = [
             'lang'       => $lang,
             'page_title' => 'Part Time Calendar',
-            'slug_group' => 'employment',
+            'slug_group' => 'parttime',
             'slug'       => '/office/employment/part-time/calendar',
             'yyyymm'     => $month,
             'month'      => date('M Y', $m_obj),

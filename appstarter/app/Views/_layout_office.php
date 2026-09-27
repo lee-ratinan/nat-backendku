@@ -74,15 +74,33 @@
                                     '/office/employment/salary'                 => 'Salary',
                                     '/office/employment/salary/stats/currency/' => '<i class="fa-solid fa-fw fa-chart-line"></i> By Currency',
                                     '/office/employment/salary/stats/company/'  => '<i class="fa-solid fa-fw fa-chart-line"></i> By Company',
+                                ]
+                            ],
+                            [
+                                'id'    => 'freelance',
+                                'group' => '<i class="fa-solid fa-suitcase fa-fw"></i> Freelance',
+                                'items' => [
                                     '/office/employment/freelance'              => 'Freelance',
                                     '/office/employment/freelance/stats'        => '<i class="fa-solid fa-fw fa-chart-bar"></i> Statistics',
                                     '/office/employment/freelance-client'       => '<i class="fa-solid fa-fw fa-users"></i> Freelance Client',
                                     '/office/employment/freelance-income'       => '<i class="fa-solid fa-fw fa-dollar-sign"></i> Freelance Income',
                                     '/office/employment/freelance-income/stats' => '<i class="fa-solid fa-fw fa-chart-line"></i> Statistics',
+                                ]
+                            ],
+                            [
+                                'id'    => 'parttime',
+                                'group' => '<i class="fa-solid fa-suitcase fa-fw"></i> Part-Time',
+                                'items' => [
                                     '/office/employment/part-time'              => 'Part-Time Job',
                                     '/office/employment/part-time/pay-period'   => '<i class="fa-solid fa-fw fa-calendar-check"></i> Part-Time Pay Period',
                                     '/office/employment/part-time/calendar'     => '<i class="fa-solid fa-fw fa-calendar"></i> Calendar',
                                     '/office/employment/part-time/stats'        => '<i class="fa-solid fa-fw fa-chart-bar"></i> Statistics',
+                                ]
+                            ],
+                            [
+                                'id'    => 'cpf',
+                                'group' => '<i class="fa-solid fa-money-bill fa-fw"></i> CPF',
+                                'items' => [
                                     '/office/employment/cpf'                    => 'CPF',
                                     '/office/employment/cpf/contribution'       => '<i class="fa-solid fa-fw fa-chart-bar"></i> CPF Contribution',
                                     '/office/employment/cpf/investment'         => '<i class="fa-solid fa-fw fa-chart-bar"></i> CPF Investment',

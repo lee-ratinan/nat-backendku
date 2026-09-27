@@ -83,7 +83,7 @@ class CompanyPartTimeScheduleModel extends Model
         return $configurations;
     }
 
-    public function applyFilter(string $start_date, string $end_date, int $period_id): void
+    public function applyFilter(string $start_date, string $end_date): void
     {
         if (!empty($start_date)) {
             $this->where('scheduled_start >=', $start_date);
@@ -91,38 +91,53 @@ class CompanyPartTimeScheduleModel extends Model
         if (!empty($end_date)) {
             $this->where('scheduled_end <=', $end_date);
         }
-        if (0 < $period_id) {
-            $this->where('period_id', $period_id);
-        }
     }
 
     public function  getDataTables(int $start, int $length, string $order_column, string $order_direction, string $start_date, string $end_date, int $period_id): array
     {
-        $record_total    = $this->countAllResults();
-        $record_filtered = $record_total;
-        if (!empty($start_date) || !empty($end_date) || 0 < $period_id) {
-            if (!empty($start_date)) {
-                $start_date .= ' 00:00:00';
-            }
-            if (!empty($end_date)) {
-                $end_date .= ' 23:59:59';
-            }
-            $this->applyFilter($start_date, $end_date, $period_id);
-            $record_filtered = $this->countAllResults();
-            $this->applyFilter($start_date, $end_date, $period_id);
+        if (0 < $period_id) {
+            $period_model = new CompanyPartTimePeriodModel();
+            $row          = $period_model->find($period_id);
+            $start_date   = $row['period_start'];
+            $end_date     = $row['period_end'];
         }
+        if (empty($start_date) || empty($end_date)) {
+            $start_date  = date('Y-m-01');
+            $end_date    = date('Y-m-t');
+        }
+        // RUNNING
+        $result     = [];
+        $dt_running = $end_date;
+        while ($dt_running >= $start_date) {
+            $time_running    = strtotime($dt_running);
+            $dt_str          = date(DATE_FORMAT_DB, $time_running);
+            $result[$dt_str] = [
+                '',
+                '-',
+                date(DATE_FORMAT_UI . ' (D)', strtotime($dt_running)),
+                '',
+                '0.00',
+                '0.00',
+                '-',
+            ];
+            $dt_running = date(DATE_FORMAT_DB, strtotime('-1 day', $time_running));
+        }
+        // CALCULATING
+        $start_date .= ' 00:00:00';
+        $end_date   .= ' 23:59:59';
+        $this->applyFilter($start_date, $end_date);
         $raw_result = $this
             ->select('company_pt_schedule.*, company_pt_period.period_start, company_pt_period.period_end')
             ->join('company_pt_period', 'company_pt_period.id = company_pt_schedule.period_id')
             ->orderBy($order_column, $order_direction)->limit($length, $start)->findAll();
-        $result     = [];
         $hours      = 0.0;
         $breaks     = 0.0;
         $session    = session();
         $locale     = $session->locale;
+        // MAIN
         foreach ($raw_result as $row) {
             $id       = $row['id'] * self::ID_NONCE;
-            $result[] = [
+            $result[date(DATE_FORMAT_DB, strtotime($row['scheduled_start']))] = [
                 '<a class="btn btn-outline-primary" href="' . base_url($locale . '/office/employment/part-time/edit/' . $id) . '"><i class="fa-solid fa-edit"></i></a>',
                 format_date_range($row['period_start'], $row['period_end']),
                 date(DATE_FORMAT_UI . ' (D)', strtotime($row['scheduled_start'])) . ': ' . date(TIME_FORMAT_UI, strtotime($row['scheduled_start'])),
@@ -144,9 +159,9 @@ class CompanyPartTimeScheduleModel extends Model
             ''
         ];
         return [
-            'recordsTotal'    => $record_total,
-            'recordsFiltered' => $record_filtered,
-            'data'            => $result,
+            'recordsTotal'    => count($result),
+            'recordsFiltered' => count($raw_result),
+            'data'            => array_values($result),
             'footer'          => $footer
         ];
     }

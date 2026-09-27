@@ -25,7 +25,7 @@ $this->extend($layout);
                         <h5 class="card-title">Part-Time Schedule</h5>
                         <div class="row g-3 mb-3">
                             <div class="col">
-                                <label for="start_date">Start Date</label><br/><input class="form-control" type="date" id="start_date" name="start_date" placeholder="Start Date" min="2026-04-01" max="<?= date('Y-m-d') ?>" />
+                                <label for="start_date">Start Date</label><br/><input class="form-control" type="date" id="start_date" name="start_date" placeholder="Start Date" min="2026-04-01" max="<?= date('Y-m-t', strtotime('+1 month')) ?>" />
                             </div>
                             <div class="col">
                                 <label for="end_date">End Date</label><br/><input class="form-control" type="date" id="end_date" name="end_date" placeholder="End Date" min="2026-04-01" max="<?= date('Y-m-t', strtotime('+1 month')) ?>" />
@@ -89,7 +89,8 @@ $this->extend($layout);
                 serverSide: true,
                 fixedHeader: true,
                 searching: false, // don't allow the search for this one
-                pageLength: 50,
+                pageLength: -1,
+                ordering: false,
                 scrollX: true,
                 ajax: {
                     url: '<?= base_url($session->locale . '/office/employment/part-time') ?>',
