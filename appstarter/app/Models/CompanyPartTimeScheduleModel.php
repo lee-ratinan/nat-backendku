@@ -16,6 +16,7 @@ class CompanyPartTimeScheduleModel extends Model
         'scheduled_hours',
         'scheduled_break',
         'work_location',
+        'shift_remarks',
         'created_by',
         'created_at',
         'updated_at'
@@ -63,12 +64,19 @@ class CompanyPartTimeScheduleModel extends Model
             'details'     => 'Let the JS calculates the field'
         ],
         'work_location'   => [
-            'type'        => 'text',
-            'label'       => 'Work Location',
-            'required'    => true,
-            'placeholder' => 'Work Location',
-            'details'     => 'Location code of the work location'
+            'type'          => 'text',
+            'label'         => 'Work Location',
+            'required'      => true,
+            'placeholder'   => 'Work Location',
+            'details'       => 'Location code of the work location',
+            'copy-to-field' => ['PDD']
         ],
+        'shift_remarks'   => [
+            'type'        => 'text',
+            'label'       => 'Shift Remarks',
+            'required'    => false,
+            'placeholder' => 'Shift Remarks'
+        ]
     ];
 
     public function getConfigurations(): array
@@ -119,6 +127,7 @@ class CompanyPartTimeScheduleModel extends Model
                 '0.00',
                 '0.00',
                 '-',
+                '-',
             ];
             $dt_running = date(DATE_FORMAT_DB, strtotime('-1 day', $time_running));
         }
@@ -145,6 +154,7 @@ class CompanyPartTimeScheduleModel extends Model
                 number_format($row['scheduled_hours'] ?? 0, 2),
                 number_format($row['scheduled_break'] ?? 0, 2),
                 $row['work_location'],
+                $row['shift_remarks'],
             ];
             $hours      += $row['scheduled_hours'];
             $breaks     += $row['scheduled_break'];

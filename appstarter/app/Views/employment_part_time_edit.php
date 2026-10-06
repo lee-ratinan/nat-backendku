@@ -30,6 +30,7 @@ $this->extend($layout);
                             'scheduled_hours',
                             'scheduled_break',
                             'work_location',
+                            'shift_remarks'
                         ];
                         foreach ($fields as $field) {
                             generate_form_field($field, $config[$field], @$row[$field]);
@@ -101,7 +102,7 @@ $this->extend($layout);
             });
            $('#btn-save').click(function (e) {
                e.preventDefault();
-               let ids = ['period_id', 'scheduled_start', 'scheduled_end', 'scheduled_hours', 'scheduled_break', 'work_location'];
+               let ids = ['period_id', 'scheduled_start', 'scheduled_end', 'scheduled_hours', 'scheduled_break', 'work_location', 'shift_remarks'];
                for (let i = 0; i < ids.length; i++) {
                    if ('' === $('#' + ids[i]).val()) {
                        toastr.warning('Please ensure all mandatory fields are filled.');
@@ -121,6 +122,7 @@ $this->extend($layout);
                        'scheduled_hours': $('#scheduled_hours').val(),
                        'scheduled_break': $('#scheduled_break').val(),
                        'work_location': $('#work_location').val(),
+                       'shift_remarks': $('#shift_remarks').val()
                    },
                    success: function (response) {
                         if ('success' === response.status) {

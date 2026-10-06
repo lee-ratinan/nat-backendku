@@ -34,91 +34,91 @@ class JourneyMasterModel extends Model
     const ID_NONCE = 827;
 
     private array $configurations = [
-        'id'            => [
-            'type'      => 'hidden',
-            'label'     => 'ID'
+        'id'              => [
+            'type'  => 'hidden',
+            'label' => 'ID'
         ],
-        'trip_code'     => [
+        'trip_code'       => [
             'type'        => 'text',
             'label'       => 'Trip Code',
             'required'    => false,
             'maxlength'   => 8,
             'placeholder' => 'NRT2025'
         ],
-        'country_code'  => [
+        'country_code'    => [
             'type'        => 'select',
             'label'       => 'Country',
             'required'    => true,
             'placeholder' => 'US',
             'options'     => []
         ],
-        'visited_states' => [
+        'visited_states'  => [
             'type'        => 'multiple-checkbox',
             'label'       => 'Visited States/Provinces/Prefectures',
             'required'    => false,
             'placeholder' => 'JP-01,JP-02',
             'options'     => []
         ],
-        'date_entry'    => [
+        'date_entry'      => [
             'type'        => 'date',
             'label'       => 'Entry',
             'required'    => true,
             'placeholder' => '2025-01-01'
         ],
-        'date_exit'     => [
+        'date_exit'       => [
             'type'        => 'date',
             'label'       => 'Exit',
             'required'    => false,
             'placeholder' => '2025-01-01'
         ],
-        'day_count'     => [
+        'day_count'       => [
             'type'        => 'number',
             'label'       => 'Day Count',
             'required'    => true,
             'placeholder' => '5'
         ],
-        'entry_port_id' => [
-            'type'        => 'select',
-            'label'       => 'Port of Entry',
-            'required'    => true,
-            'options'     => []
+        'entry_port_id'   => [
+            'type'     => 'select',
+            'label'    => 'Port of Entry',
+            'required' => true,
+            'options'  => []
         ],
-        'exit_port_id'  => [
-            'type'        => 'select',
-            'label'       => 'Port of Exit',
-            'required'    => false,
-            'options'     => []
+        'exit_port_id'    => [
+            'type'     => 'select',
+            'label'    => 'Port of Exit',
+            'required' => false,
+            'options'  => []
         ],
-        'visa_info'     => [
-            'type'        => 'text',
-            'label'       => 'Visa Information',
-            'required'    => false,
-            'maxlength'   => 128,
-            'placeholder' => 'Visitor Visa',
-            'details'     => 'Use: Permanent Resident, Citizen, Visitor/Tourist, or actual Visa type',
+        'visa_info'       => [
+            'type'          => 'text',
+            'label'         => 'Visa Information',
+            'required'      => false,
+            'maxlength'     => 128,
+            'placeholder'   => 'Visitor Visa',
+            'details'       => 'Use: Permanent Resident, Citizen, Visitor/Tourist, or actual Visa type',
             'copy-to-field' => ['Permanent Resident', 'Citizen', 'Visitor/Tourist']
         ],
-        'trip_tags'     => [
-            'type'        => 'text',
-            'label'       => 'Trip Tags',
-            'required'    => false,
-            'maxlength'   => 256,
-            'placeholder' => 'vacation, family, education, religious',
-            'details'     => 'Use comma to separate tags. Example: vacation, family, education, family, religious, etc.',
+        'trip_tags'       => [
+            'type'          => 'text',
+            'label'         => 'Trip Tags',
+            'required'      => false,
+            'maxlength'     => 256,
+            'placeholder'   => 'vacation, family, education, religious',
+            'details'       => 'Use comma to separate tags. Example: vacation, family, education, family, religious, etc.',
             'copy-to-field' => ['vacation', 'family', 'education', 'religious', 'work']
         ],
-        'journey_details'     => [
+        'journey_details' => [
             'type'        => 'text',
             'label'       => 'Journey Details',
             'required'    => false,
             'maxlength'   => 256,
             'placeholder' => 'My Vacation'
         ],
-        'journey_status'     => [
-            'type'        => 'select',
-            'label'       => 'Status',
-            'required'    => true,
-            'options' => [
+        'journey_status'  => [
+            'type'     => 'select',
+            'label'    => 'Status',
+            'required' => true,
+            'options'  => [
                 'as_planned' => 'As Planned',
                 'canceled'   => 'Canceled',
             ]

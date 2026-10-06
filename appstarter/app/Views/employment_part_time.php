@@ -57,9 +57,10 @@ $this->extend($layout);
                                     <th style="min-width:180px;">Period</th>
                                     <th style="min-width:200px;">Start</th>
                                     <th style="min-width:125px;">End</th>
-                                    <th style="min-width:140px;">Scheduled (hrs)</th>
-                                    <th style="min-width:130px;">Break (hrs)</th>
-                                    <th style="min-width:130px;">Location</th>
+                                    <th style="min-width:140px;">Hours</th>
+                                    <th style="min-width:130px;">Break</th>
+                                    <th style="min-width:100px;">Loc.</th>
+                                    <th style="min-width:100px;">Note</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>

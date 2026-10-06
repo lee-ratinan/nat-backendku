@@ -2005,7 +2005,8 @@ class Employment extends BaseController
             'scheduled_end',
             'scheduled_hours',
             'scheduled_break',
-            'work_location'
+            'work_location',
+            'shift_remarks'
         ];
         $order              = $this->request->getPost('order');
         $start              = 0;
@@ -2069,6 +2070,7 @@ class Employment extends BaseController
             'scheduled_hours',
             'scheduled_break',
             'work_location',
+            'shift_remarks'
         ];
         foreach ($fields as $field) {
             $value        = $this->request->getPost($field);
