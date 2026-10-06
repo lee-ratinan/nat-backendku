@@ -53,7 +53,9 @@ $this->extend($layout);
                                     <th style="min-width:100px;">CPF<br/>($)</th>
                                     <th style="min-width:100px;">CPF<br/>(%)</th>
                                     <th style="min-width:100px;">Total<br/>($)</th>
-                                    <th style="min-width:100px;">Average<br/>($/hr)</th>
+                                    <th style="min-width:100px;">Avg<br/>($/hr)</th>
+                                    <th style="min-width:100px;">Days</th>
+                                    <th style="min-width:100px;">Avg hrs/d</th>
                                 </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -66,6 +68,8 @@ $this->extend($layout);
                                     <th></th>
                                     <th></th>
                                     <th class="text-end"></th>
+                                    <th></th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>

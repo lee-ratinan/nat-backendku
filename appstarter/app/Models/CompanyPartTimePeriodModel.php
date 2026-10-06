@@ -133,8 +133,10 @@ class CompanyPartTimePeriodModel extends Model
         $schedule_model  = new CompanyPartTimeScheduleModel();
         $scheduled_hours = $schedule_model->getScheduledHoursByPeriodIds(array_keys($period_ids));
         $hours           = [];
+        $wd_in_period    = [];
         foreach ($scheduled_hours as $row) {
-            $hours[$row['period_id']] = $row['scheduled_hours'];
+            $hours[$row['period_id']]        = $row['scheduled_hours'];
+            $wd_in_period[$row['period_id']] = $row['total_days'];
         }
         // Final result
         $result     = [];
@@ -177,7 +179,12 @@ class CompanyPartTimePeriodModel extends Model
                     $deduct_percent = number_format($row['income_deduction'] * 100 / $row['subtotal_income'], 2) . '%';
                 }
             }
-            $result[]                 = [
+            $wd       = $wd_in_period[$row['id']] ?? 0;
+            $avg_hrs  = '';
+            if (0 < $wd && 0 < $row['actual_hours']) {
+                $avg_hrs = number_format($row['actual_hours'] / $wd, 2);
+            }
+            $result[] = [
                 $link,
                 $row['company_trade_name'],
                 date(DATE_FORMAT_UI, strtotime($row['period_start'])),
@@ -190,6 +197,8 @@ class CompanyPartTimePeriodModel extends Model
                 $deduct_percent,
                 number_format($row['total_income'] ?? 0, 2),
                 number_format($row['average_hourly_income'] ?? 0, 2),
+                $wd,
+                $avg_hrs,
             ];
         }
         $footer = [
@@ -204,6 +213,8 @@ class CompanyPartTimePeriodModel extends Model
             number_format($sum['income_deduction'], 2),
             '',
             number_format($sum['total_income'], 2),
+            '',
+            '',
             ''
         ];
         return [

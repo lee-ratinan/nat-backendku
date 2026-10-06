@@ -181,7 +181,7 @@ class CompanyPartTimeScheduleModel extends Model
         if (is_int($period_ids)) {
             $period_ids = [$period_ids];
         }
-        $results = $this->select('period_id, SUM(scheduled_hours) as scheduled_hours, SUM(scheduled_break) as scheduled_break')
+        $results = $this->select('period_id, SUM(scheduled_hours) as scheduled_hours, SUM(scheduled_break) as scheduled_break, COUNT(*) as total_days')
             ->whereIn('period_id', $period_ids)
             ->groupBy('period_id')
             ->findAll();
