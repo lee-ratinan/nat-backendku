@@ -34,11 +34,8 @@
                     <i data-lucide="quote"></i>
                     <figure>
                         <blockquote>
-                            <p>My potential is limitless, and I am capable of achieving great things.</p>
+                            <p><?= get_daily_affirmation() ?></p>
                         </blockquote>
-                        <figcaption>
-                            — lovebox.love
-                        </figcaption>
                     </figure>
                 </div>
             </div>
