@@ -64,7 +64,7 @@ $this->extend($layout);
                         </div>
                     <?php endif; ?>
                     <div class="row">
-                        <div class="col"><a class="btn btn-link mt-3 w-100" href="<?= base_url('forgot-password') ?>"><?= lang('Auth.forgot_password.page_title') ?></a></div>
+                        <div class="col d-none"><a class="btn btn-link mt-3 w-100" href="<?= base_url('forgot-password') ?>"><?= lang('Auth.forgot_password.page_title') ?></a></div>
                         <div class="col d-none"><a class="btn btn-link mt-3 w-100" href="<?= base_url('register') ?>"><?= lang('Auth.register.page_title') ?></a></div>
                     </div>
                 </div>
