@@ -27,9 +27,9 @@
 <body>
 <div class="container-fluid p-0">
     <div class="row g-0">
-        <div class="col-xl-6 d-none d-xl-flex">
+        <div class="d-none d-md-flex col-md-6 col-xl-5 col-xxl-4">
             <div class="auth-full-page position-relative">
-                <img src="<?= base_url('appstack/public-hero.jpg') ?>" class="auth-bg" alt="Unsplash">
+                <img src="<?= $banner_file ?>" class="auth-bg" alt="Unsplash">
                 <div class="auth-quote">
                     <i data-lucide="quote"></i>
                     <figure>
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6">
+        <div class="col-md-6 col-xl-7 col-xxl-8">
             <div class="auth-full-page d-flex p-4 p-xl-5">
                 <div class="d-flex flex-column w-100 h-100">
                     <div class="auth-form">

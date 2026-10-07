@@ -17,6 +17,7 @@ $this->extend($layout);
         <div class="card-body">
             <form class="row g-3" id="login-form">
                 <div class="col-12 pt-4">
+                    <img class="d-block mb-3 d-md-none mb-md-0 mx-auto rounded-3" src="<?= $banner_file ?>" alt="Banner" style="max-height:150px" />
                     <h5 class="card-title text-center pb-0 fs-4"><?= lang('Auth.login.heading') ?></h5>
                     <p class="text-center small"><?= lang('Auth.login.subheading') ?></p>
                 </div>
@@ -67,6 +68,7 @@ $this->extend($layout);
                         <div class="col d-none"><a class="btn btn-link mt-3 w-100" href="<?= base_url('forgot-password') ?>"><?= lang('Auth.forgot_password.page_title') ?></a></div>
                         <div class="col d-none"><a class="btn btn-link mt-3 w-100" href="<?= base_url('register') ?>"><?= lang('Auth.register.page_title') ?></a></div>
                     </div>
+                    <p class="d-md-none text-center mt-3"><b><?= get_daily_affirmation() ?></b></p>
                 </div>
             </form>
             <form class="row g-3" id="expired-password-form" style="display: none">

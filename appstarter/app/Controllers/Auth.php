@@ -83,9 +83,12 @@ class Auth extends BaseController
             return redirect()->to(base_url($session->locale . '/office/dashboard'));
         }
         $userMasterModel = new UserMasterModel();
+        $rand            = rand(1, 11);
+        $file            = base_url("appstack/public-banner-{$rand}.webp");
         $data            = [
-            'columns'    => $userMasterModel->getConfigurations(['email_address', 'account_password_hash']),
-            'page_title' => lang('Auth.login.page_title')
+            'columns'     => $userMasterModel->getConfigurations(['email_address', 'account_password_hash']),
+            'page_title'  => lang('Auth.login.page_title'),
+            'banner_file' => $file
         ];
         return view('system/auth_login', $data);
     }
