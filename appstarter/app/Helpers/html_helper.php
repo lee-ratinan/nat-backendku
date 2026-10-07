@@ -18,85 +18,146 @@ use App\Models\HealthAffirmationModel;
  */
 function generate_form_field(string $id, array $configuration, int|string|array|null $current_value = ''): void
 {
-    $input_type = $configuration['type'];
-    $required   = (@$configuration['required'] ? 'required' : '');
-    $readonly   = (@$configuration['readonly'] ? 'readonly' : '');
-    $disabled   = (@$configuration['disabled'] ? 'disabled' : '');
-    $min        = (@$configuration['min'] ? "min='{$configuration['min']}'" : '');
-    $max        = (@$configuration['max'] ? "max='{$configuration['max']}'" : '');
-    $minlength  = (@$configuration['minlength'] ? "minlength='{$configuration['minlength']}'" : '');
-    $maxlength  = (@$configuration['maxlength'] ? "maxlength='{$configuration['maxlength']}'" : '');
-    $label      = (isset($configuration['label_key']) ? lang($configuration['label_key']) : @$configuration['label']);
-    if (in_array($input_type, ['text', 'email', 'password', 'number', 'date', 'time', 'datetime-local', 'month', 'week', 'url', 'search', 'color'])) {
-        $placeholder = @$configuration['placeholder'] ?? '';
-        $value = (!empty($current_value) && '0000-00-00' != $current_value ? "value='{$current_value}'" : (!empty($configuration['default']) ? "value='{$configuration['default']}'" : ''));
-        echo "<div class='form-floating mb-3' id='{$id}-block'><input type='{$input_type}' class='form-control' id='{$id}' name='{$id}' placeholder='{$placeholder}' $value $required $readonly $disabled $min $minlength $max $maxlength><label for='{$id}'>" . $label . "</label>";
+    // Sanitize output helper
+    $e = static fn(?string $value): string => htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+    $input_type = $configuration['type'] ?? 'text';
+    $label      = isset($configuration['label_key'])
+        ? lang($configuration['label_key'])
+        : ($configuration['label'] ?? '');
+
+    // Common HTML5 boolean attributes
+    $boolean_attrs = '';
+    foreach (['required', 'readonly', 'disabled', 'autofocus', 'multiple', 'novalidate'] as $attr) {
+        if (!empty($configuration[$attr])) {
+            $boolean_attrs .= " {$attr}";
+        }
+    }
+
+    // Common HTML5 valued attributes
+    $valued_attr_keys = [
+        'min', 'max', 'step', 'pattern', 'minlength', 'maxlength',
+        'autocomplete', 'placeholder', 'accept', 'size', 'list', 'form'
+    ];
+    $valued_attrs = '';
+    foreach ($valued_attr_keys as $attr) {
+        if (isset($configuration[$attr]) && $configuration[$attr] !== '') {
+            $valued_attrs .= " {$attr}='" . $e($configuration[$attr]) . "'";
+        }
+    }
+
+    // Standard HTML5 text-like & numeric/date input types
+    $standard_inputs = [
+        'text', 'email', 'password', 'number', 'date', 'time', 'datetime-local',
+        'month', 'week', 'url', 'search', 'color', 'file', 'range'
+    ];
+
+    if (in_array($input_type, $standard_inputs, true)) {
+        $val = (!empty($current_value) && '0000-00-00' !== $current_value)
+            ? $current_value
+            : ($configuration['default'] ?? '');
+
+        $value_attr = ($input_type !== 'file') ? "value='" . $e($val) . "'" : '';
+
+        echo "<div class='form-floating mb-3' id='{$e($id)}-block'>";
+        echo "<input type='{$e($input_type)}' class='form-control' id='{$e($id)}' name='{$e($id)}'{$value_attr}{$boolean_attrs}{$valued_attrs}>";
+        echo "<label for='{$e($id)}'>" . $e($label) . "</label>";
+
         if (!empty($configuration['details'])) {
-            echo "<small class='form-text text-muted small'>" . lang($configuration['details']) . "</small>";
+            echo "<small class='form-text text-muted small'>" . $e(lang($configuration['details'])) . "</small>";
         }
         if (!empty($configuration['copy-to-field'])) {
             generate_link_for_copy_to_field($configuration['copy-to-field'], $id);
         }
         echo "</div>";
-    } else if ('tel' == $input_type) {
-        $country_codes = lang('ListCallingCode.codes');
-        echo "<div class='input-group mb-3' id='{$id}-block'><span class='input-group-text'>+</span>";
-        echo "<div class='form-floating'><select class='form-select' id='{$configuration['country_code_field']}' name='{$configuration['country_code_field']}' $required $readonly $disabled>";
+
+    } else if ('tel' === $input_type) {
+        $country_codes = lang('ListCallingCode.codes') ?? [];
+        $country_val   = is_array($current_value) ? ($current_value[0] ?? '') : '';
+        $phone_val     = is_array($current_value) ? ($current_value[1] ?? '') : '';
+
+        $cc_field    = $configuration['country_code_field'] ?? "{$id}_country";
+        $cc_label    = isset($configuration['country_code_label']) ? lang($configuration['country_code_label']) : 'Country Code';
+        $phone_field = $configuration['phone_number_field'] ?? "{$id}_phone";
+        $phone_label = isset($configuration['phone_number_label']) ? lang($configuration['phone_number_label']) : $label;
+
+        echo "<div class='input-group mb-3' id='{$e($id)}-block'><span class='input-group-text'>+</span>";
+        echo "<div class='form-floating'>";
+        echo "<select class='form-select' id='{$e($cc_field)}' name='{$e($cc_field)}'{$boolean_attrs}>";
         echo "<option value=''></option>";
         foreach ($country_codes as $codes) {
-            echo '<option value="' . $codes['code'] . '" ' . ($current_value[0] == $codes['code'] ? 'selected' : '') . '>' . $codes['label'] . ', ' . $codes['code_label'] . '</option>';
+            $selected = ($country_val == $codes['code']) ? 'selected' : '';
+            echo "<option value='" . $e($codes['code']) . "' {$selected}>" . $e($codes['label']) . ", " . $e($codes['code_label']) . "</option>";
         }
-        echo "</select><label for='{$configuration['country_code_field']}'>" . lang($configuration['country_code_label']) . "</label></div>";
-        echo "<div class='form-floating'><input type='tel' class='form-control' id='{$configuration['phone_number_field']}' name='{$configuration['phone_number_field']}' placeholder='{$configuration['placeholder']}' value='{$current_value[1]}' $required $readonly $disabled $min $minlength $max $maxlength>";
-        echo "<label for='{$configuration['phone_number_field']}'>" . lang($configuration['phone_number_label']) . "</label>";
+        echo "</select><label for='{$e($cc_field)}'>" . $e($cc_label) . "</label></div>";
+
+        echo "<div class='form-floating'>";
+        echo "<input type='tel' class='form-control' id='{$e($phone_field)}' name='{$e($e($phone_field))}' value='" . $e($phone_val) . "'{$boolean_attrs}{$valued_attrs}>";
+        echo "<label for='{$e($phone_field)}'>" . $e($phone_label) . "</label>";
         echo "</div></div>";
-    } else if ('hidden' == $input_type) {
-        echo '<input type="hidden" id="' . $id . '" name="' . $id . '" value="' . @$current_value . '">';
-    } else if ('select' == $input_type) {
-        $options = $configuration['options'];
-        echo "<div class='form-floating mb-3' id='{$id}-block'><select class='form-select' id='{$id}' name='{$id}' $required $readonly $disabled>";
+
+    } else if ('hidden' === $input_type) {
+        $val = is_array($current_value) ? implode(',', $current_value) : $current_value;
+        echo "<input type='hidden' id='{$e($id)}' name='{$e($id)}' value='" . $e($val) . "'>";
+
+    } else if ('select' === $input_type) {
+        $options = $configuration['options'] ?? [];
+        echo "<div class='form-floating mb-3' id='{$e($id)}-block'>";
+        echo "<select class='form-select' id='{$e($id)}' name='{$e($id)}'{$boolean_attrs}{$valued_attrs}>";
         echo "<option value=''></option>";
         foreach ($options as $key => $value) {
-            $selected  = ($current_value == $key ? 'selected' : '');
+            $selected  = ($current_value == $key) ? 'selected' : '';
             $str_value = lang($value);
-            echo "<option value='{$key}' $selected>" . $str_value . "</option>";
+            echo "<option value='" . $e($key) . "' {$selected}>" . $e($str_value) . "</option>";
         }
-        echo "</select><label for='{$id}'>" . $label . "</label></div>";
-    } else if ('textarea' == $input_type) {
-        $placeholder = @$configuration['placeholder'] ?? '';
-        echo "<div class='form-floating mb-3' id='{$id}-block'><textarea class='form-control' id='{$id}' name='{$id}' placeholder='{$placeholder}' $required $readonly $disabled style='height:100px'>{$current_value}</textarea><label for='{$id}'>" . $label . "</label>";
+        echo "</select><label for='{$e($id)}'>" . $e($label) . "</label></div>";
+
+    } else if ('textarea' === $input_type) {
+        $rows_attr = isset($configuration['rows']) ? " rows='" . $e($configuration['rows']) . "'" : " style='height:100px'";
+        echo "<div class='form-floating mb-3' id='{$e($id)}-block'>";
+        echo "<textarea class='form-control' id='{$e($id)}' name='{$e($id)}'{$boolean_attrs}{$valued_attrs}{$rows_attr}>" . $e($current_value) . "</textarea>";
+        echo "<label for='{$e($id)}'>" . $e($label) . "</label>";
         if (!empty($configuration['details'])) {
-            echo "<small class='form-text text-muted small'>" . lang($configuration['details']) . "</small>";
+            echo "<small class='form-text text-muted small'>" . $e(lang($configuration['details'])) . "</small>";
         }
         echo "</div>";
-    } else if ('tinymce' == $input_type) {
-        $placeholder = @$configuration['placeholder'] ?? '';
-        echo "<div class='mb-3' id='{$id}-block'><label class='mb-1' for='{$id}'>" . $label . "</label>";
-        echo "<button class='btn btn-link' id='{$id}-expand-btn' onclick='expandTinyMceArea(\"{$id}\")'><i class='fa-solid fa-up-right-and-down-left-from-center'></i> Expand</button>";
-        echo "<button class='btn btn-link' id='{$id}-shrink-btn' onclick='shrinkTinyMceArea(\"{$id}\")'style='display:none'><i class='fa-solid fa-down-left-and-up-right-to-center'></i> Shrink</button>";
-        echo "<br><textarea class='form-control tinymce' id='{$id}' name='{$id}' placeholder='{$placeholder}' $required $readonly $disabled>{$current_value}</textarea>";
+
+    } else if ('tinymce' === $input_type) {
+        echo "<div class='mb-3' id='{$e($id)}-block'><label class='mb-1' for='{$e($id)}'>" . $e($label) . "</label>";
+        echo "<button type='button' class='btn btn-link' id='{$e($id)}-expand-btn' onclick='expandTinyMceArea(\"{$e($id)}\")'><i class='fa-solid fa-up-right-and-down-left-from-center'></i> Expand</button>";
+        echo "<button type='button' class='btn btn-link' id='{$e($id)}-shrink-btn' onclick='shrinkTinyMceArea(\"{$e($id)}\")' style='display:none'><i class='fa-solid fa-down-left-and-up-right-to-center'></i> Shrink</button>";
+        echo "<br><textarea class='form-control tinymce' id='{$e($id)}' name='{$e($id)}'{$boolean_attrs}{$valued_attrs}>" . $e($current_value) . "</textarea>";
         if (!empty($configuration['details'])) {
-            echo "<small class='form-text text-muted small'>" . lang($configuration['details']) . "</small>";
+            echo "<small class='form-text text-muted small'>" . $e(lang($configuration['details'])) . "</small>";
         }
         echo "</div>";
-    } else if ('multiple-checkbox' == $input_type) {
-        $options = $configuration['options'];
-        $height  = 250;
-        $count   = count($options);
-        if ($count < 10) {
-            $height = 100;
-        } else if ($count < 30) {
-            $height = 150;
-        } else if ($count < 50) {
-            $height = 200;
+
+    } else if ('checkbox' === $input_type || 'radio' === $input_type) {
+        $checked = (!empty($current_value) || !empty($configuration['checked'])) ? 'checked' : '';
+        echo "<div class='form-check mb-3' id='{$e($id)}-block'>";
+        echo "<input class='form-check-input' type='{$e($input_type)}' id='{$e($id)}' name='{$e($id)}' value='" . $e($configuration['value'] ?? '1') . "' {$checked}{$boolean_attrs}{$valued_attrs}>";
+        echo "<label class='form-check-label' for='{$e($id)}'>" . $e($label) . "</label>";
+        echo "</div>";
+
+    } else if ('multiple-checkbox' === $input_type) {
+        $options     = $configuration['options'] ?? [];
+        $count       = count($options);
+        $height      = $count < 10 ? 100 : ($count < 30 ? 150 : ($count < 50 ? 200 : 250));
+        $curr_values = is_array($current_value) ? $current_value : [];
+        $first_key   = array_key_first($options);
+
+        echo "<div class='form-floating mb-3 px-2' style='height:{$height}px;overflow:auto;' id='{$e($id)}-block'>";
+        echo '<div class="row"><div class="col-12">';
+        if ($first_key !== null) {
+            echo '<label for="' . $e($id . '_' . $first_key) . '">' . $e($label) . '</label>';
         }
-        echo "<div class='form-floating mb-3 px-2' style='height:{$height}px;overflow:auto;' id='{$id}-block'>";
-        echo '<div class="row"><div class="col-12"><label for="' . $id . '_' . array_key_first($options) . '">' . $configuration['label'] . '</label></div>';
+        echo '</div>';
+
         foreach ($options as $key => $value) {
-            $checked = (in_array($key, $current_value) ? 'checked' : '');
+            $checked = in_array($key, $curr_values, false) ? 'checked' : '';
             echo "<div class='col-6 form-check'>";
-            echo "<input class='form-check-input ms-1 me-2' type='checkbox' id='{$id}_{$key}' name='{$id}[]' value='{$key}' $checked>";
-            echo "<label class='form-check-label' for='{$id}_{$key}'>{$value}</label>";
+            echo "<input class='form-check-input ms-1 me-2' type='checkbox' id='{$e($id . '_' . $key)}' name='{$e($id)}[]' value='" . $e($key) . "' {$checked}{$boolean_attrs}>";
+            echo "<label class='form-check-label' for='{$e($id . '_' . $key)}'>" . $e($value) . "</label>";
             echo "</div>";
         }
         echo '</div></div>';
