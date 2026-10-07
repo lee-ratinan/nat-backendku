@@ -16,17 +16,15 @@ $this->extend($layout);
     <div class="card mb-3">
         <div class="card-body">
             <form class="row g-3" id="login-form">
-                <div class="col-12 pt-4">
-                    <img class="d-block mb-3 d-md-none mb-md-0 mx-auto rounded-3" src="<?= $banner_file ?>" alt="Banner" style="max-height:150px" />
+                <div class="col-4 d-md-none pt-5">
+                    <img class="img-fluid rounded-3" src="<?= $banner_file ?>" alt="Banner" />
+                </div>
+                <div class="col-8 col-md-12 pt-4">
                     <h5 class="card-title text-center pb-0 fs-4"><?= lang('Auth.login.heading') ?></h5>
                     <p class="text-center small"><?= lang('Auth.login.subheading') ?></p>
-                </div>
-                <div class="col-12">
                     <div id="error-message-1"></div>
                     <?php generate_form_field('email_address', $columns['email_address']) ?>
                     <?php generate_form_field('account_password', $columns['account_password_hash']) ?>
-                </div>
-                <div class="col-12">
                     <button class="btn btn-primary w-100" type="submit" id="btn-login"><?= lang('Auth.login.login_button') ?></button>
                     <!-- OPTION FOR GOOGLE SIGN IN -->
                     <?php if ($use_google_signin) : ?>
