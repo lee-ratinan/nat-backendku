@@ -110,8 +110,14 @@ class CompanyPartTimeScheduleModel extends Model
             $end_date     = $row['period_end'];
         }
         if (empty($start_date) || empty($end_date)) {
-            $start_date  = date('Y-m-01');
-            $end_date    = date('Y-m-t');
+            $today_date  = intval(date('d'));
+            if ($today_date < 15) {
+                $start_date  = date('Y-m-01');
+                $end_date    = date('Y-m-15');
+            } else {
+                $start_date  = date('Y-m-16');
+                $end_date    = date('Y-m-t');
+            }
         }
         // RUNNING
         $result     = [];
