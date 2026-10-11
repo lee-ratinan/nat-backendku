@@ -102,7 +102,7 @@ $this->extend($layout);
             });
            $('#btn-save').click(function (e) {
                e.preventDefault();
-               let ids = ['period_id', 'scheduled_start', 'scheduled_end', 'scheduled_hours', 'scheduled_break', 'work_location', 'shift_remarks'];
+               let ids = ['period_id', 'scheduled_start', 'scheduled_end', 'scheduled_hours', 'scheduled_break', 'work_location'];
                for (let i = 0; i < ids.length; i++) {
                    if ('' === $('#' + ids[i]).val()) {
                        toastr.warning('Please ensure all mandatory fields are filled.');
