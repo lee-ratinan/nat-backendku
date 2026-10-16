@@ -24,7 +24,7 @@ function generate_form_field(string $id, array $configuration, int|string|array|
     $input_type = $configuration['type'] ?? 'text';
     $label      = isset($configuration['label_key'])
         ? lang($configuration['label_key'])
-        : ($configuration['label'] ?? '');
+        : (strip_tags($configuration['label']) ?? '???');
 
     // Common HTML5 boolean attributes
     $boolean_attrs = '';
@@ -42,7 +42,7 @@ function generate_form_field(string $id, array $configuration, int|string|array|
     $valued_attrs = '';
     foreach ($valued_attr_keys as $attr) {
         if (isset($configuration[$attr]) && $configuration[$attr] !== '') {
-            $valued_attrs .= " {$attr}='" . $e($configuration[$attr]) . "'";
+            $valued_attrs .= " {$attr}='" . strip_tags($e($configuration[$attr])) . "'";
         }
     }
 
